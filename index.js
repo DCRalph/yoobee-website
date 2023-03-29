@@ -64,6 +64,10 @@ app.get('/', (req, res) => {
   res.sendFile('index.html')
 })
 
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Hello World' })
+})
+
 app.get('/api/me', valaidateUser, (req, res) => {
   res.json(req.user)
 })
