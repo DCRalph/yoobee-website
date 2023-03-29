@@ -6,3 +6,11 @@ html,
 body {
   height: 100%;
 }
+
+.hover-bg {
+  @apply bg-opacity-30 transition-all hover:bg-opacity-50;
+}
+
+.btn-purple {
+  @apply rounded-full bg-primary px-4 py-2 text-2xl font-semibold text-white transition-colors hover:bg-secondary;
+}

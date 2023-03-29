@@ -16,5 +16,5 @@ model User {
   ip    String? 
   email String  @unique
   password String
-  name  String?
+  name  String
 }
