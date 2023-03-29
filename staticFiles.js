@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 
 router.get('/login', valaidateUser, (req, res) => {
   if (req.user) {
-    return res.redirect('/')
+    return res.redirect('/account')
   } else {
     return res.sendFile(src('login.html'))
   }
@@ -27,10 +27,22 @@ router.get('/login', valaidateUser, (req, res) => {
 
 router.get('/register', valaidateUser, (req, res) => {
   if (req.user) {
-    return res.redirect('/')
+    return res.redirect('/account')
   } else {
     return res.sendFile(src('register.html'))
   }
+})
+
+router.get('/account', valaidateUser, (req, res) => {
+  if (req.user) {
+    return res.sendFile(src('account.html'))
+  } else {
+    return res.redirect('/login')
+  }
+})
+
+router.get('/order', (req, res) => {
+  return res.sendFile(src('order.html'))
 })
 
 router.get('/tailwind.css', (req, res) => {
@@ -39,6 +51,20 @@ router.get('/tailwind.css', (req, res) => {
 
 router.get('/asests/:filename', (req, res) => {
   const filename = src('asests/' + req.params.filename)
+  if (filename.includes('..')) {
+    return res.sendStatus(418)
+  }
+  if (fs.existsSync(filename)) {
+    return res.status(200).sendFile(filename)
+  } else {
+    return res
+      .status(404)
+      .json({ err: '404 File Not Found', file: req.params.filename })
+  }
+})
+
+router.get('/scripts/:filename', (req, res) => {
+  const filename = src('scripts/' + req.params.filename)
   if (filename.includes('..')) {
     return res.sendStatus(418)
   }

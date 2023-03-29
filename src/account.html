@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BurgerFuel - Account</title>
+    <link rel="stylesheet" href="/tailwind.css" />
+    <script src="/scripts/account.js" defer></script>
+  </head>
+  <body class="bg-zinc-100 antialiased">
+    <main class="flex flex-wrap justify-center gap-8 p-8">
+      <form
+        class="min-w-[16rem] overflow-hidden rounded-lg border-2 border-zinc-600 bg-zinc-800 sm:min-w-[24rem]"
+        action="/api/me/update"
+        method="POST">
+        <div class="grid grid-cols-6 gap-6 p-6 pb-0">
+          <div
+            class="col-span-6 text-center text-3xl font-extrabold text-white">
+            You
+          </div>
+
+          <div class="col-span-6 flex items-center gap-4">
+            <div>
+              <div class="text-2xl text-white" id="nameText">name</div>
+              <div class="text-base text-gray-400" id="emailText">email</div>
+            </div>
+          </div>
+
+          <div class="col-span-6 sm:col-span-3" id="emailInput">
+            <label for="email" class="text-sm text-gray-400" id="emailLabel">
+              Email
+            </label>
+            <input
+              name="email"
+              id="email"
+              placeholder="email"
+              type="email"
+              autocomplete="false"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 sm:text-sm" />
+          </div>
+
+          <div class="col-span-6 sm:col-span-3"></div>
+
+          <div class="col-span-6 sm:col-span-3" id="currentPasswordInput">
+            <label
+              for="currentPassword"
+              class="text-sm text-gray-400"
+              id="currentPasswordLable">
+              Current Password
+            </label>
+            <input
+              name="currentPassword"
+              id="currentPassword"
+              placeholder="Current Password"
+              autocomplete="false"
+              type="password"
+              class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 sm:text-sm" />
+          </div>
+
+          <div class="col col-span-6 sm:col-span-3" id="newPasswordInput">
+            <label
+              for="newPassword"
+              class="text-sm text-gray-400"
+              id="newPasswordLable">
+              Change Password
+            </label>
+            <input
+              name="newPassword"
+              id="newPassword"
+              placeholder="Change Password"
+              autocomplete="false"
+              type="password"
+              class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 sm:text-sm" />
+          </div>
+
+          <!--  -->
+        </div>
+        <div class="mt-6 flex justify-end bg-zinc-700 px-6 py-4">
+          <button
+            class="sora flex justify-center rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white shadow-lg shadow-blue-600/50 ring-blue-500 hover:bg-blue-700 active:ring-2"
+            id="saveBtn">
+            Save
+          </button>
+        </div>
+      </form>
+
+      <!-- end -->
+    </main>
+  </body>
+</html>

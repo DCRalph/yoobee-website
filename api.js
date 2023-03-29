@@ -3,7 +3,9 @@ const router = express.Router()
 
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
+
 import { nanoid } from 'nanoid'
+import z from 'zod'
 
 const valaidateUser = (req, res, next) => {
   let token = req.cookies.token
@@ -56,17 +58,84 @@ router.get('/', (req, res) => {
 })
 
 router.get('/me', valaidateUser, (req, res) => {
-  res.json(req.user)
+  if (req.user) {
+    const user = { name: req.user.name, email: req.user.email, logedIn: true }
+
+    return res.json(user)
+  } else return res.json({ message: 'not logged in', logedIn: false })
+})
+
+router.post('/me/update', valaidateUser, (req, res) => {
+  if (req.user) {
+    let body
+    const v = z.object({
+      email: z.string().email(),
+      currentPassword: z.string(),
+      newPassword: z.string(),
+    })
+
+    try {
+      body = v.parse(req.body)
+    } catch (err) {
+      console.log(err)
+
+      return res.status(401).json({ message: 'Input error' })
+    }
+
+    const email = body.email
+    const currentPassword = body.currentPassword
+    const newPassword = body.newPassword
+
+    const toUpdate = {}
+
+    if (newPassword.length > 0) {
+      if (currentPassword != req.user.password) {
+        return res.status(401).json({ message: 'Incorrect Password' })
+      }
+      toUpdate.password = newPassword
+    }
+
+    if (email.length > 0 && email != req.user.email) {
+      toUpdate.email = email
+    }
+
+    prisma.user
+      .update({
+        where: {
+          id: req.user.id,
+        },
+        data: toUpdate,
+      })
+      .then((user) => {
+        return res.status(200).json({ message: 'ok' })
+      })
+      .catch(() => {
+        return res.status(401).json({ message: 'update failed' })
+      })
+  } else return res.status(401).json({ message: 'not logged in' })
 })
 
 router.post('/login', valaidateUser, (req, res) => {
   if (req.user) return res.status(200).json({ message: 'ok' })
 
-  const body = req.body
+  console.log(req.body)
+
+  let body
+  const v = z.object({
+    email: z.string().email(),
+    password: z.string(),
+  })
+
+  try {
+    body = v.parse(req.body)
+  } catch (err) {
+    console.log(err)
+
+    return res.status(401).json({ message: 'Input error' })
+  }
+
   const email = body.email
   const password = body.password
-
-  // console.log(body)
 
   prisma.user
     .findFirst({
@@ -105,13 +174,28 @@ router.post('/login', valaidateUser, (req, res) => {
 router.post('/register', valaidateUser, async (req, res) => {
   if (req.user) return res.status(200).json({ message: 'ok' })
 
-  const body = req.body
+  console.log(req.body)
+
+  let body
+  const v = z.object({
+    name: z.string(),
+    email: z.string().email(),
+    password: z.string(),
+    passwordConfirm: z.string(),
+  })
+
+  try {
+    body = v.parse(req.body)
+  } catch (err) {
+    console.log(err)
+
+    return res.status(401).json({ message: 'Input error' })
+  }
+
   const name = body.name
   const email = body.email
   const password = body.password
-  const passwordConfirm = body['password-confirm']
-
-  console.log(body)
+  const passwordConfirm = body.passwordConfirm
 
   if (password != passwordConfirm) {
     return res.status(401).json({ message: 'Passwords do not match' })
@@ -142,6 +226,31 @@ router.post('/register', valaidateUser, async (req, res) => {
   }
 
   return res.status(401).json({ message: 'Registration failed' })
+})
+
+router.get('/logout', valaidateUser, (req, res) => {
+  if (req.user) {
+    console.log(req.user)
+
+    prisma.user
+      .update({
+        where: {
+          id: req.user.id,
+        },
+        data: {
+          token: null,
+        },
+      })
+      .then((user) => {
+        // return res.status(200).json({ message: 'ok' })
+        return res.redirect('/')
+      })
+      .catch((err) => {
+        console.log(err)
+        return res.status(401).json({ message: 'logout failed' })
+      })
+    // } else return res.status(401).json({ message: 'not logged in' })
+  } else return res.redirect('/')
 })
 
 export default router

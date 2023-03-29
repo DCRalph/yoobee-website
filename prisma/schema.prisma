@@ -11,10 +11,18 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id    String  @id @unique @default(uuid())
   token String? @unique
   ip    String? 
   email String  @unique
   password String
   name  String
+}
+
+model Food {
+  id        String   @id @unique @default(uuid())
+  name      String
+  description String
+  price     Float
+  image     String
 }
