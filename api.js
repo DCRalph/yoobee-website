@@ -24,7 +24,7 @@ const valaidateUser = (req, res, next) => {
         if (user != null) {
           req.user = user
 
-          if (user.ip != ip) {
+          if (user.ip != req.IP) {
             prisma.user
               .update({
                 where: {
