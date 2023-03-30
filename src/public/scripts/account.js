@@ -1,3 +1,7 @@
+import customAlert from './modules/alert.js'
+
+const Alert = new customAlert('#alerts')
+
 const form = document.querySelector('form')
 
 const saveBtn = document.querySelector('#saveBtn')
@@ -47,10 +51,10 @@ form.addEventListener('submit', (e) => {
 
   fetch(url, fetchOptions).then((response) => {
     if (response.status == 200) {
-      alert('ok')
+      Alert.success('Account updated')
     } else {
       response.json().then((data) => {
-        alert(data.message)
+        Alert.error(data.error)
       })
     }
   })

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register</title>
     <link rel="stylesheet" href="tailwind.css" />
+    <script src="/scripts/register.js" defer type="module"></script>
   </head>
   <body>
     <div
@@ -111,108 +112,5 @@
         </form>
       </div>
     </div>
-
-    <script>
-      const form = document.querySelector('form')
-
-      const password = document.querySelector('#password')
-      const passwordConfirm = document.querySelector('#passwordConfirm')
-      const passwordNotMatch = document.querySelector('#password-not-match')
-
-      const checkPassword = () => {
-        if (
-          password.value != passwordConfirm.value &&
-          passwordConfirm.value != ''
-        ) {
-          passwordNotMatch.classList.remove('hidden')
-        } else {
-          passwordNotMatch.classList.add('hidden')
-        }
-      }
-
-      password.addEventListener('change', checkPassword)
-      passwordConfirm.addEventListener('change', checkPassword)
-
-      const Alert = (message) => {
-        const TIME = 5000
-
-        const alertBox = document.querySelector('#alerts')
-        const alert = document.createElement('div')
-        alert.classList.add(
-          'bg-red-100',
-          'rounded-lg',
-          'py-4',
-          'px-6',
-          'mb-4',
-          'text-base',
-          'text-red-700',
-          'overflow-hidden',
-          'relative'
-        )
-        alert.innerHTML = message
-        const bar = document.createElement('div')
-
-        bar.classList.add(
-          'absolute',
-          'bottom-0',
-          'left-0',
-          'bg-red-700',
-          'rounded',
-          'h-2'
-        )
-        bar.style.width = '100%'
-        alert.appendChild(bar)
-
-        alertBox.appendChild(alert)
-
-        const added = new Date().getTime()
-
-        const updateBar = () => {
-          const now = new Date().getTime()
-          const diff = now - added
-          const percent = 100 - (diff / TIME) * 100
-          bar.style.width = `${percent}%`
-          if (diff < TIME) {
-            requestAnimationFrame(updateBar)
-          } else {
-            alert.remove()
-          }
-        }
-
-        updateBar()
-      }
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault()
-
-        const formData = new FormData(form)
-        const data = {}
-        formData.forEach((value, key) => {
-          data[key] = value
-        })
-
-        const url = form.getAttribute('action')
-        const method = form.getAttribute('method')
-        const body = JSON.stringify(data)
-        const headers = new Headers()
-        headers.append('Content-Type', 'application/json')
-
-        const fetchOptions = {
-          method,
-          headers,
-          body,
-        }
-
-        fetch(url, fetchOptions).then((response) => {
-          if (response.status == 200) {
-            window.location.href = '/'
-          } else {
-            response.json().then((data) => {
-              Alert(data.message)
-            })
-          }
-        })
-      })
-    </script>
   </body>
 </html>

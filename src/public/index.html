@@ -67,27 +67,27 @@
           </a>
           <h2 class="mb-4 text-4xl font-semibold">Menu</h2>
 
-          <a href="/" class="text-xl underline hover:text-blue-500"> Home </a>
-          <a href="/our-food" class="text-xl underline hover:text-blue-500">
-            Our Food
-          </a>
-          <!-- <a href="/login" class="text-xl underline hover:text-blue-500">
-            Login
-          </a>
-          <a href="/register" class="text-xl underline hover:text-blue-500">
-            Register
+          <a
+            href="/"
+            class="text-xl font-semibold underline hover:text-blue-500">
+            Home
           </a>
           <a
-            href="/logout"
-            class="text-xl text-red-600 underline hover:text-blue-500">
-            Logout
-          </a> -->
+            href="/our-food"
+            class="text-xl font-semibold underline hover:text-blue-500">
+            Our Food
+          </a>
+          <a
+            href="/#"
+            class="text-xl font-semibold underline hover:text-blue-500">
+            Cart
+          </a>
 
           <a
             href="order"
             class="hover-bg mt-4 h-16 rounded-xl bg-black p-2 md:h-16">
             <img
-              src="asests/btn-order.png"
+              src="/asests/btn-order.png"
               class="aspect-[77/41] h-full object-contain" />
           </a>
         </div>
@@ -96,7 +96,7 @@
           href="order"
           class="hover-bg hidden h-12 rounded-xl bg-black p-2 md:block md:h-16">
           <img
-            src="asests/btn-order.png"
+            src="/asests/btn-order.png"
             class="aspect-[77/41] h-full object-contain" />
         </a>
 
@@ -117,32 +117,13 @@
           </svg>
           <div
             id="cart-number"
-            class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs md:-right-2 md:-top-2 md:h-6 md:w-6 md:text-base">
-            0
-          </div>
+            class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs md:-right-2 md:-top-2 md:h-6 md:w-6 md:text-base"></div>
         </div>
-
-        <!-- <a
-          href="/login"
-          class="hover-bg hidden w-12 rounded-xl bg-black p-2 md:block md:w-16">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-full w-full">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-          </svg>
-        </a> -->
 
         <button
           type="button"
           class="hover-bg w-12 rounded-xl bg-black p-2 md:block md:w-16"
-          id="user-menu-button">
+          id="account-menu-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -159,7 +140,7 @@
 
         <div
           class="absolute right-0 top-12 mt-2 flex hidden w-48 origin-top-right scale-75 flex-col gap-2 rounded-md bg-white p-2 opacity-0 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-16"
-          id="profile-menu"></div>
+          id="account-menu"></div>
       </div>
     </nav>
 
@@ -234,9 +215,9 @@
 
     <section class="col-span-full h-2 bg-primary"></section>
 
-    <footer class="flex flex-col flex-wrap gap-4 bg-secondary py-4 text-white">
+    <footer class="flex flex-col flex-wrap gap-4 bg-secondary pt-4 text-white">
       <div class="flex w-full flex-wrap justify-evenly px-24 text-center">
-        <ol class="w-32">
+        <ol class="mb-4 w-48">
           <li><h2 class="text-xl font-bold">Links</h2></li>
           <li><a href="">Menu</a></li>
           <li><a href="/order">Order online</a></li>
@@ -244,14 +225,14 @@
           <li><a href="">Vouchers</a></li>
         </ol>
 
-        <ol class="w-32">
+        <ol class="mb-4 w-48">
           <li><h2 class="text-xl font-bold">Contact</h2></li>
           <li><a href="">0800 1234 1234</a></li>
           <li><a href="">help@burgerfuel.com</a></li>
           <li><a href="">123 burgurfuel st</a></li>
         </ol>
 
-        <ol class="w-32">
+        <ol class="mb-4 w-48">
           <li><h2 class="text-xl font-bold">Corporate</h2></li>
           <li><a href="">Jobs</a></li>
           <li><a href="">Media kit</a></li>

@@ -4,54 +4,9 @@ const router = express.Router()
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-import { nanoid } from 'nanoid'
 import z from 'zod'
 
-const valaidateUser = (req, res, next) => {
-  let token = req.cookies.token
-  req.IP = req.headers['x-forwarded-for'] || req.socket.remoteAddress
-  req.token = token
-  req.user = null
-
-  // console.log(typeof token)
-
-  if (typeof token != 'undefined' && token.length == 16) {
-    prisma.user
-      .findUnique({
-        where: {
-          token: token,
-        },
-      })
-      .then((user) => {
-        if (user != null) {
-          req.user = user
-
-          if (user.ip != req.IP) {
-            prisma.user
-              .update({
-                where: {
-                  id: user.id,
-                },
-                data: {
-                  ip: req.IP,
-                },
-              })
-              .then((user) => {
-                req.user = user
-                return next()
-              })
-          } else return next()
-        } else return next()
-      })
-  } else {
-    token = nanoid(16)
-    req.token = token
-    res.cookie('token', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 365,
-    })
-    return next()
-  }
-}
+import valaidateUser from '../util/validateUser.js'
 
 router.get('/', (req, res) => {
   res.json({ message: 'ok' })
@@ -253,5 +208,39 @@ router.get('/logout', valaidateUser, (req, res) => {
   } else return res.redirect('/')
 })
 
+router.get('/cart', valaidateUser, (req, res) => {
+  if (req.user) {
+    prisma.user
+      .findUnique({
+        where: {
+          id: req.user.id,
+        },
+      })
+      .then((user) => {
+        const cart = user.cart
+        return res.json(cart)
+      })
+  } else return res.json({ message: 'not logged in' })
+})
+
+router.get('/food-items', (req, res) => {
+  prisma.food.findMany().then((food) => {
+    return res.json(food)
+  })
+})
+
+router.get('/food-items/:id', (req, res) => {
+  const id = req.params.id
+
+  prisma.food
+    .findUnique({
+      where: {
+        id,
+      },
+    })
+    .then((food) => {
+      return res.json(food)
+    })
+})
+
 export default router
-export { valaidateUser }
