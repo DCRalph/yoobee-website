@@ -26,7 +26,7 @@ model Account {
   email String  @unique
   password String
   name  String
-  cart Json @default("[]")
+  cart Json? 
 }
 
 model Session {
@@ -35,8 +35,7 @@ model Session {
   accountId String? @unique 
   token String @unique
   ip    String 
-  cart Json @default("[]")
-
+  cart Json?
 }
 
 model Food {
@@ -45,5 +44,5 @@ model Food {
   description String
   price     Float
   image     String?
-  category  Json @default("[]")
+  category  Json 
 }
