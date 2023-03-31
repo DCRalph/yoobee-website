@@ -206,6 +206,7 @@ router.post('/register', valaidateSession, async (req, res) => {
       name: name,
       email: email,
       password: password,
+      cart: req.session.cart,
       session: {
         connect: {
           id: req.session.id,
@@ -214,19 +215,28 @@ router.post('/register', valaidateSession, async (req, res) => {
     },
   })
 
-  if (createUser) {
-    return res.status(200).json({ message: 'ok' })
-  }
+  if (!createUser)
+    return res.status(401).json({ message: 'Registration failed', code: 1 })
 
-  return res.status(401).json({ message: 'Registration failed' })
+  const updateSession = await prisma.session.update({
+    where: {
+      id: req.session.id,
+    },
+    data: {
+      cart: [],
+    },
+  })
+
+  if (!updateSession)
+    return res.status(401).json({ message: 'Registration failed', code: 2 })
+
+  return res.status(200).json({ message: 'ok' })
 })
 
 router.get('/logout', valaidateSession, (req, res) => {
   if (!req.session.account) {
     return res.redirect('/')
   }
-
-  console.log(req.session)
 
   prisma.session
     .update({
@@ -269,43 +279,35 @@ router.get('/food-items/:id', (req, res) => {
     })
 })
 
-router.get('/cart', valaidateSession, (req, res) => {
-  if (req.session) {
-    prisma.session
-      .findUnique({
-        where: {
-          id: req.session.id,
-        },
-      })
-      .then((user) => {
-        const cart = user.cart
-        return res.json(cart)
-      })
-  } else return res.json({ message: 'not logged in' })
+router.get('/cart', valaidateSession, async (req, res) => {
+  if (req.session.account) return res.status(200).json(req.session.account.cart)
+  else if (req.session) return res.status(200).json(req.session.cart)
+
+  return res.status(401).json({ message: 'no account or session' })
 })
 
 router.post('/cart/add', valaidateSession, (req, res) => {
-  if (req.session) {
-    let body
+  if (!req.session) return res.status(401).json({ message: 'no session' })
 
-    const v = z.object({
-      foodId: z.number(),
-      quantity: z.number(),
-    })
+  let body
 
-    try {
-      body = v.parse(req.body)
-    } catch (err) {
-      console.log(err)
+  const v = z.object({
+    foodId: z.number(),
+    quantity: z.number(),
+  })
 
-      return res.status(401).json({ message: 'Input error' })
-    }
+  try {
+    body = v.parse(req.body)
+  } catch (err) {
+    console.log(err)
 
-    const foodId = body.foodId
-    const quantity = body.quantity
-
-    console.log(foodId, quantity)
+    return res.status(401).json({ message: 'Input error' })
   }
+
+  const foodId = body.foodId
+  const quantity = body.quantity
+
+  console.log(foodId, quantity)
 })
 
 export default router

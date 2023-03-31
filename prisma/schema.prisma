@@ -10,15 +10,15 @@ datasource db {
   relationMode = "prisma"
 }
 
-model User {
-  id    String  @id @unique @default(uuid())
-  token String? @unique
-  ip    String? 
-  email String  @unique
-  password String
-  name  String
-  cart Json @default("[]")
-}
+// model User {
+//   id    String  @id @unique @default(uuid())
+//   token String? @unique
+//   ip    String? 
+//   email String  @unique
+//   password String
+//   name  String
+//   cart Json @default("[]")
+// }
 
 model Account {
   id    String  @id @unique @default(uuid())
