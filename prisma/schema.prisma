@@ -26,16 +26,16 @@ model Account {
   email String  @unique
   password String
   name  String
-  cart Json @default("[]")
+  cart Json? @default("[]")
 }
 
 model Session {
   id    String  @id @unique @default(uuid())
   account Account? @relation(fields: [accountId], references: [id])
   accountId String? @unique 
-  token String? @unique
-  ip    String? 
-  cart Json @default("[]")
+  token String @unique
+  ip    String 
+  cart Json? @default("[]")
 
 }
 
