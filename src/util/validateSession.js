@@ -33,6 +33,7 @@ const valaidateSesion = async (req, res, next) => {
       data: {
         token: token,
         ip: req.IP,
+        cart: [],
       },
     })
 
