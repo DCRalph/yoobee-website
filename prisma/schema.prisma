@@ -17,7 +17,26 @@ model User {
   email String  @unique
   password String
   name  String
-  cart Json @default("{\"cart\": []}")
+  cart Json @default("[]")
+}
+
+model Account {
+  id    String  @id @unique @default(uuid())
+  session Session? 
+  email String  @unique
+  password String
+  name  String
+  cart Json @default("[]")
+}
+
+model Session {
+  id    String  @id @unique @default(uuid())
+  account Account? @relation(fields: [accountId], references: [id])
+  accountId String? @unique 
+  token String? @unique
+  ip    String? 
+  cart Json @default("[]")
+
 }
 
 model Food {
@@ -26,4 +45,5 @@ model Food {
   description String
   price     Float
   image     String?
+  category  Json @default("[]")
 }

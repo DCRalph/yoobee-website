@@ -6,22 +6,37 @@ const prisma = new PrismaClient()
 
 import z from 'zod'
 
-import valaidateUser from '../util/validateUser.js'
+import valaidateSession from '../util/validateSession.js'
 
 router.get('/', (req, res) => {
   res.json({ message: 'ok' })
 })
 
-router.get('/me', valaidateUser, (req, res) => {
-  if (req.user) {
-    const user = { name: req.user.name, email: req.user.email, logedIn: true }
+router.get('/me', valaidateSession, (req, res) => {
+  let sendBack = { user: null, account: null, logedIn: false }
 
-    return res.json(user)
-  } else return res.json({ message: 'not logged in', logedIn: false })
+  if (req.session) {
+    sendBack.user = {
+      id: req.session.id,
+      token: req.session.token,
+    }
+  }
+
+  if (req.session.account) {
+    sendBack.account = {
+      id: req.session.account.id,
+      email: req.session.account.email,
+      name: req.session.account.name,
+    }
+    sendBack.logedIn = true
+  }
+
+  return res.json(sendBack)
+  // } else return res.json({ message: 'not logged in', logedIn: false })
 })
 
-router.post('/me/update', valaidateUser, (req, res) => {
-  if (req.user) {
+router.post('/me/update', valaidateSession, (req, res) => {
+  if (req.session) {
     let body
     const v = z.object({
       email: z.string().email(),
@@ -44,20 +59,20 @@ router.post('/me/update', valaidateUser, (req, res) => {
     const toUpdate = {}
 
     if (newPassword.length > 0) {
-      if (currentPassword != req.user.password) {
+      if (currentPassword != req.session.password) {
         return res.status(401).json({ message: 'Incorrect Password' })
       }
       toUpdate.password = newPassword
     }
 
-    if (email.length > 0 && email != req.user.email) {
+    if (email.length > 0 && email != req.session.email) {
       toUpdate.email = email
     }
 
-    prisma.user
+    prisma.account
       .update({
         where: {
-          id: req.user.id,
+          id: req.session.accountId,
         },
         data: toUpdate,
       })
@@ -70,10 +85,11 @@ router.post('/me/update', valaidateUser, (req, res) => {
   } else return res.status(401).json({ message: 'not logged in' })
 })
 
-router.post('/login', valaidateUser, (req, res) => {
-  if (req.user) return res.status(200).json({ message: 'ok' })
+router.post('/login', valaidateSession, async (req, res) => {
+  if (!req.session) return res.status(401).json({ message: 'no session' })
+  if (req.session.account) return res.status(200).json({ message: 'ok' })
 
-  console.log(req.body)
+  // console.log(req.body)
 
   let body
   const v = z.object({
@@ -92,44 +108,63 @@ router.post('/login', valaidateUser, (req, res) => {
   const email = body.email
   const password = body.password
 
-  prisma.user
-    .findFirst({
-      where: {
-        email: email,
-        password: password,
+  const authenticateAccount = await prisma.account.findFirst({
+    where: {
+      email: email,
+      password: password,
+    },
+  })
+
+  if (!authenticateAccount)
+    return res
+      .status(401)
+      .json({ message: 'Incorrect Email or Password', code: 1 })
+
+  const updateSession = await prisma.session.update({
+    where: {
+      id: req.session.id,
+    },
+    data: {
+      cart: [],
+      account: {
+        connect: {
+          id: authenticateAccount.id,
+        },
+        // update: {
+        //   where: {
+        //     id: authenticateAccount.id,
+        //   },
+        //   data: {
+        //     cart: req.session.cart,
+        //   },
+        // },
       },
-    })
-    .then((user) => {
-      if (user) {
-        prisma.user
-          .update({
-            where: {
-              id: user.id,
-            },
-            data: {
-              token: req.token,
-            },
-          })
-          .then((user) => {
-            console.log(req.token)
-            return res.status(200).json({ message: 'ok' })
-          })
-          .catch(() => {
-            return res.status(401).json({ message: 'login failed' })
-          })
-      } else {
-        return res.status(401).json({ message: 'Incorrect Email or Password' })
-      }
-    })
-    .catch(() => {
-      return res.status(401).json({ message: 'login fail db' })
-    })
+    },
+  })
+
+  if (!updateSession)
+    return res.status(401).json({ message: 'login failed', code: 2 })
+
+  const updateAccount = await prisma.account.update({
+    where: {
+      id: authenticateAccount.id,
+    },
+    data: {
+      cart: req.session.cart,
+    },
+  })
+
+  if (!updateAccount)
+    return res.status(401).json({ message: 'login failed', code: 3 })
+
+  return res.status(200).json({ message: 'ok' })
 })
 
-router.post('/register', valaidateUser, async (req, res) => {
-  if (req.user) return res.status(200).json({ message: 'ok' })
+router.post('/register', valaidateSession, async (req, res) => {
+  if (!req.session) return res.status(401).json({ message: 'no session' })
+  if (req.session.account) return res.status(200).json({ message: 'ok' })
 
-  console.log(req.body)
+  // console.log(req.body)
 
   let body
   const v = z.object({
@@ -156,7 +191,7 @@ router.post('/register', valaidateUser, async (req, res) => {
     return res.status(401).json({ message: 'Passwords do not match' })
   }
 
-  const checkEmail = await prisma.user.findFirst({
+  const checkEmail = await prisma.account.findFirst({
     where: {
       email: email,
     },
@@ -166,13 +201,16 @@ router.post('/register', valaidateUser, async (req, res) => {
     return res.status(401).json({ message: 'Email already exists' })
   }
 
-  const createUser = await prisma.user.create({
+  const createUser = await prisma.account.create({
     data: {
       name: name,
       email: email,
       password: password,
-      token: req.token,
-      ip: req.IP,
+      session: {
+        connect: {
+          id: req.session.id,
+        },
+      },
     },
   })
 
@@ -183,44 +221,32 @@ router.post('/register', valaidateUser, async (req, res) => {
   return res.status(401).json({ message: 'Registration failed' })
 })
 
-router.get('/logout', valaidateUser, (req, res) => {
-  if (req.user) {
-    console.log(req.user)
+router.get('/logout', valaidateSession, (req, res) => {
+  if (!req.session.account) {
+    return res.redirect('/')
+  }
 
-    prisma.user
-      .update({
-        where: {
-          id: req.user.id,
-        },
-        data: {
-          token: null,
-        },
-      })
-      .then((user) => {
-        // return res.status(200).json({ message: 'ok' })
-        return res.redirect('/')
-      })
-      .catch((err) => {
-        console.log(err)
-        return res.status(401).json({ message: 'logout failed' })
-      })
-    // } else return res.status(401).json({ message: 'not logged in' })
-  } else return res.redirect('/')
-})
+  console.log(req.session)
 
-router.get('/cart', valaidateUser, (req, res) => {
-  if (req.user) {
-    prisma.user
-      .findUnique({
-        where: {
-          id: req.user.id,
+  prisma.session
+    .update({
+      where: {
+        id: req.session.id,
+      },
+      data: {
+        account: {
+          disconnect: true,
         },
-      })
-      .then((user) => {
-        const cart = user.cart
-        return res.json(cart)
-      })
-  } else return res.json({ message: 'not logged in' })
+      },
+    })
+    .then(() => {
+      // return res.status(200).json({ message: 'ok' })
+      return res.redirect('/')
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(401).json({ message: 'logout failed' })
+    })
 })
 
 router.get('/food-items', (req, res) => {
@@ -241,6 +267,45 @@ router.get('/food-items/:id', (req, res) => {
     .then((food) => {
       return res.json(food)
     })
+})
+
+router.get('/cart', valaidateSession, (req, res) => {
+  if (req.session) {
+    prisma.session
+      .findUnique({
+        where: {
+          id: req.session.id,
+        },
+      })
+      .then((user) => {
+        const cart = user.cart
+        return res.json(cart)
+      })
+  } else return res.json({ message: 'not logged in' })
+})
+
+router.post('/cart/add', valaidateSession, (req, res) => {
+  if (req.session) {
+    let body
+
+    const v = z.object({
+      foodId: z.number(),
+      quantity: z.number(),
+    })
+
+    try {
+      body = v.parse(req.body)
+    } catch (err) {
+      console.log(err)
+
+      return res.status(401).json({ message: 'Input error' })
+    }
+
+    const foodId = body.foodId
+    const quantity = body.quantity
+
+    console.log(foodId, quantity)
+  }
 })
 
 export default router

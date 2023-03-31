@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-import valaidateUser from '../util/validateUser.js'
+import valaidateSession from '../util/validateSession.js'
 
 const publicDir = (f) => {
   return resolve(__dirname, '../public/' + f)
@@ -17,24 +17,25 @@ router.get('/', (req, res) => {
   res.sendFile(publicDir('index.html'))
 })
 
-router.get('/login', valaidateUser, (req, res) => {
-  if (req.user) {
+router.get('/login', valaidateSession, (req, res) => {
+  console.log(req.session)
+  if (req.session.account) {
     return res.redirect('/account')
   } else {
     return res.sendFile(publicDir('login.html'))
   }
 })
 
-router.get('/register', valaidateUser, (req, res) => {
-  if (req.user) {
+router.get('/register', valaidateSession, (req, res) => {
+  if (req.session.account) {
     return res.redirect('/account')
   } else {
     return res.sendFile(publicDir('register.html'))
   }
 })
 
-router.get('/account', valaidateUser, (req, res) => {
-  if (req.user) {
+router.get('/account', valaidateSession, (req, res) => {
+  if (req.session.account) {
     return res.sendFile(publicDir('account.html'))
   } else {
     return res.redirect('/login')

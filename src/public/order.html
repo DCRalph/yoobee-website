@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="/tailwind.css" />
 
     <script src="/scripts/nav.js" defer></script>
+    <script src="/scripts/order.js" defer></script>
   </head>
   <body class="bg-zinc-100 antialiased">
     <nav
-      class="fixed top-0 flex h-16 w-full items-center bg-primary px-4 transition-all md:h-24 md:px-8">
+      class="fixed top-0 z-10 flex h-16 w-full items-center bg-primary px-4 transition-all md:h-24 md:px-8">
       <div class="h-12 transition-all md:h-20">
         <img src="/asests/logo.png" class="h-full object-contain" />
       </div>
@@ -170,5 +171,131 @@
           id="account-menu"></div>
       </div>
     </nav>
+
+    <section class="w-full pt-16 md:pt-24"></section>
+
+    <section class="relative col-span-full h-[28rem] w-full bg-red-600">
+      <img src="/asests/order-bg.jpg" class="h-full w-full object-cover" />
+
+      <ul
+        class="border-trans absolute bottom-0 col-span-full flex h-12 w-full items-center justify-center gap-2 backdrop-blur">
+        <li>
+          <input
+            type="radio"
+            id="category-favourites"
+            name="category"
+            category="favourites"
+            class="peer hidden"
+            checked />
+          <label
+            for="category-favourites"
+            class="flex cursor-pointer items-center justify-between rounded-full border-2 border-transparent bg-gray-800 px-4 text-gray-400 hover:bg-gray-700 hover:text-gray-300 peer-checked:border-primary peer-checked:text-white">
+            <h3 class="w-full text-lg font-semibold">Favourites</h3>
+          </label>
+        </li>
+
+        <li>
+          <input
+            type="radio"
+            id="category-burgers"
+            name="category"
+            category="burgers"
+            class="peer hidden" />
+          <label
+            for="category-burgers"
+            class="flex cursor-pointer items-center justify-between rounded-full border-2 border-transparent bg-gray-800 px-4 text-gray-400 hover:bg-gray-700 hover:text-gray-300 peer-checked:border-primary peer-checked:text-white">
+            <h3 class="w-full text-lg font-semibold">Burgers</h3>
+          </label>
+        </li>
+
+        <li>
+          <input
+            type="radio"
+            id="category-beef"
+            name="category"
+            category="beef"
+            class="peer hidden" />
+          <label
+            for="category-beef"
+            class="flex cursor-pointer items-center justify-between rounded-full border-2 border-transparent bg-gray-800 px-4 text-gray-400 hover:bg-gray-700 hover:text-gray-300 peer-checked:border-primary peer-checked:text-white">
+            <h3 class="w-full text-lg font-semibold">Beef</h3>
+          </label>
+        </li>
+
+        <li>
+          <input
+            type="radio"
+            id="category-chicken"
+            name="category"
+            category="chicken"
+            class="peer hidden" />
+          <label
+            for="category-chicken"
+            class="flex cursor-pointer items-center justify-between rounded-full border-2 border-transparent bg-gray-800 px-4 text-gray-400 hover:bg-gray-700 hover:text-gray-300 peer-checked:border-primary peer-checked:text-white">
+            <h3 class="w-full text-lg font-semibold">Chicken</h3>
+          </label>
+        </li>
+
+        <li>
+          <input
+            type="radio"
+            id="category-drinks"
+            name="category"
+            category="drinks"
+            class="peer hidden" />
+          <label
+            for="category-drinks"
+            class="flex cursor-pointer items-center justify-between rounded-full border-2 border-transparent bg-gray-800 px-4 text-gray-400 hover:bg-gray-700 hover:text-gray-300 peer-checked:border-primary peer-checked:text-white">
+            <h3 class="w-full text-lg font-semibold">Drinks</h3>
+          </label>
+        </li>
+
+        <li>
+          <input
+            type="radio"
+            id="category-sides"
+            name="category"
+            category="sides"
+            class="peer hidden" />
+          <label
+            for="category-sides"
+            class="flex cursor-pointer items-center justify-between rounded-full border-2 border-transparent bg-gray-800 px-4 text-gray-400 hover:bg-gray-700 hover:text-gray-300 peer-checked:border-primary peer-checked:text-white">
+            <h3 class="w-full text-lg font-semibold">Sides</h3>
+          </label>
+        </li>
+      </ul>
+
+      <!-- 
+          <input type="radio" name="category" id="Favourites" />
+          <input type="radio" name="category" id="Burgers" />
+          <input type="radio" name="category" id="Beef" />
+          <input type="radio" name="category" id="Chicken" />
+          <input type="radio" name="category" id="Drinks" />
+          <input type="radio" name="category" id="Sides" /> -->
+    </section>
+
+    <main class="my-8 grid grid-cols-12 gap-4 px-16" id="food-items-container">
+      <!-- <div
+        class="col-span-full grid h-64 w-full grid-cols-3 gap-2 rounded-xl bg-gray-200 p-2 lg:col-span-6">
+        <img
+          src="/asests/bastard.png"
+          class="col-span-1 h-full w-full object-contain" />
+
+        <div class="col-span-2">
+          <div
+            class="flex h-min items-center justify-between rounded-lg bg-gray-300 p-2">
+            <h2 class="text-4xl font-semibold">Burgur</h2>
+            <h2 class="font-base text-lg text-gray-700">$12.95</h2>
+          </div>
+          <div class="mt-4">
+            <p class="text-lg font-semibold">Description</p>
+            <p class="text-lg text-gray-700">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+              quae.
+            </p>
+          </div>
+        </div>
+      </div> -->
+    </main>
   </body>
 </html>

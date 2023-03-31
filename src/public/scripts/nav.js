@@ -109,7 +109,11 @@ const makeAccountDropdown = (logedIn) => {
   }
 }
 
-const updateCartNumber = (number) => {
+const updateCartNumber = (logedin, number) => {
+  if (!logedin) {
+    cartNumber.innerHTML = '0'
+    return
+  }
   cartNumber.innerHTML = number
 }
 
@@ -139,7 +143,7 @@ const main = async () => {
 
   makeAccountDropdown(userData.logedIn)
 
-  updateCartNumber(userCart.length)
+  updateCartNumber(userData.logedIn, userCart.length)
 }
 
 main()
