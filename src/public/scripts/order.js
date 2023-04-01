@@ -171,155 +171,135 @@ const renderFoodItems = (foodItems, filter) => {
 }
 
 const renderFoodItems2 = (items, filter) => {
-  ;`<a href="#" class="group">
-  <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-    <img src="https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg" alt="Tall slender porcelain bottle with natural clay textured body and cork stopper." class="h-full w-full object-cover object-center group-hover:opacity-75">
-  </div>
-  <h3 class="mt-4 text-sm text-gray-700">Earthen Bottle</h3>
-  <p class="mt-1 text-lg font-medium text-gray-900">$48</p>
-</a>`
-
-  // convert the string above to a DOM element
-
-  // append the DOM element to the foodItemsContainer
-
-  // repeat for all items
-
   foodItemsContainer.innerHTML = ''
   items.forEach((item) => {
-    const foodItem = document.createElement('a')
-    foodItem.setAttribute('x-type', 'food-item')
+    if (filter !== 'all' && !item.category.includes(filter)) return
+
+    const foodItem = document.createElement('div')
+    foodItem.setAttribute('x-type', 'foodItem')
+    // foodItem.setAttribute('href', `/order/product/${item.id}`)
     foodItem.classList.add(
       'group',
-      'flex',
-      'flex-col',
-      'justify-between',
-      'w-full',
-      'max-w-sm',
-      'mx-auto',
-      'rounded-lg',
-      'col-span-4',
-      'shadow-lg',
+      'col-span-3',
       'overflow-hidden',
-      'lg:max-w-full',
-      'lg:flex',
-      'lg:items-center',
-      'lg:justify-between'
+      'rounded-lg',
+      'bg-zinc-300',
+      'h-min'
     )
 
     const foodImage = document.createElement('div')
-    foodImage.setAttribute('x-type', 'food-image')
+    foodImage.setAttribute('x-type', 'foodImage')
     foodImage.classList.add(
-      'aspect-h-1',
-      'aspect-w-1',
       'w-full',
       'overflow-hidden',
-      'rounded-lg',
-      'bg-gray-200',
-      'lg:aspect-h-8',
-      'lg:aspect-w-7'
+      'bg-zinc-400',
+      'p-2',
+      'h-48'
     )
 
     const foodImageImg = document.createElement('img')
-    foodImageImg.setAttribute('x-type', 'food-image-img')
+    foodImageImg.setAttribute('x-type', 'foodImageImg')
+    foodImageImg.src = `/asests/food/${item.image}`
+
     foodImageImg.classList.add(
       'h-full',
       'w-full',
-      'object-cover',
+      'object-contain',
       'object-center',
       'group-hover:opacity-75'
     )
 
-    foodImageImg.src = `/asests/food/${item.image}`
-
     foodImage.appendChild(foodImageImg)
 
     const foodInfo = document.createElement('div')
-    foodInfo.setAttribute('x-type', 'food-info')
-    foodInfo.classList.add(
-      'flex',
-      'flex-col',
-      'justify-between',
-      'w-full',
-      'p-4',
-      'bg-white',
-      'lg:w-1/2',
-      'lg:p-8'
-    )
+    foodInfo.setAttribute('x-type', 'foodInfo')
+    foodInfo.classList.add('flex', 'flex-col', 'gap-1', 'p-2')
 
-    const foodInfoBar = document.createElement('div')
-    foodInfoBar.setAttribute('x-type', 'food-info-bar')
-    foodInfoBar.classList.add('flex', 'justify-between', 'items-center')
-
-    const foodName = document.createElement('p')
-
-    foodName.setAttribute('x-type', 'food-name')
-    foodName.classList.add('text-lg', 'font-semibold')
+    const foodName = document.createElement('h3')
+    foodName.setAttribute('x-type', 'foodName')
+    foodName.classList.add('text-base', 'text-zinc-700')
     foodName.innerHTML = item.name
 
-    const addToCartBtn = document.createElement('button')
-    addToCartBtn.setAttribute('x-type', 'add-to-cart-btn')
-    addToCartBtn.classList.add(
-      'flex',
-      'items-center',
-      'justify-center',
-      'h-10',
-      'w-10',
-      'rounded-full',
-      'bg-indigo-600',
-      'text-white',
-      'hover:bg-indigo-700',
-      'focus:outline-none',
-      'focus:ring-2',
-      'focus:ring-offset-2',
+    const foodPrice = document.createElement('p')
+    foodPrice.setAttribute('x-type', 'foodPrice')
+    foodPrice.classList.add('text-lg', 'font-medium', 'text-zinc-900')
+    foodPrice.innerHTML = `$${item.price}`
 
-      'focus:ring-indigo-500'
+    const foodBtns = document.createElement('div')
+    foodBtns.setAttribute('x-type', 'foodBtns')
+    foodBtns.classList.add('flex', 'gap-2', 'w-full', 'mt-2')
+
+    const foodInfoBtn = document.createElement('button')
+    foodInfoBtn.setAttribute('x-type', 'foodInfoBtn')
+    foodInfoBtn.classList.add(
+      // 'w-full',
+      'rounded-lg',
+      'bg-zinc-500',
+      'p-1',
+      'text-lg',
+      'font-semibold',
+      'text-white',
+      'hover:bg-zinc-600'
     )
 
-    const addToCartBtnSvg = document.createElementNS(
+    const foodInfoBtnSvg = document.createElementNS(
       'http://www.w3.org/2000/svg',
       'svg'
     )
 
-    addToCartBtnSvg.setAttribute('fill', 'none')
-    addToCartBtnSvg.setAttribute('viewBox', '0 0 24 24')
-    addToCartBtnSvg.setAttribute('stroke-width', '1.5')
-    addToCartBtnSvg.setAttribute('stroke', 'currentColor')
-    addToCartBtnSvg.classList.add('w-full', 'h-full')
+    foodInfoBtnSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    foodInfoBtnSvg.setAttribute('fill', 'none')
+    foodInfoBtnSvg.setAttribute('viewBox', '0 0 24 24')
+    foodInfoBtnSvg.setAttribute('stroke-width', '1.5')
+    foodInfoBtnSvg.setAttribute('stroke', 'currentColor')
+    foodInfoBtnSvg.classList.add('w-8', 'h-8')
 
-    const addToCartBtnSvgPath = document.createElementNS(
+    const foodInfoBtnPath = document.createElementNS(
       'http://www.w3.org/2000/svg',
       'path'
     )
-    addToCartBtnSvgPath.setAttribute('stroke-linecap', 'round')
-    addToCartBtnSvgPath.setAttribute('stroke-linejoin', 'round')
 
-    addToCartBtnSvgPath.setAttribute(
+    foodInfoBtnPath.setAttribute('stroke-linecap', 'round')
+    foodInfoBtnPath.setAttribute('stroke-linejoin', 'round')
+    foodInfoBtnPath.setAttribute(
       'd',
-      'M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+
+      'M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z'
     )
 
-    addToCartBtnSvg.appendChild(addToCartBtnSvgPath)
+    foodInfoBtnSvg.appendChild(foodInfoBtnPath)
+    foodInfoBtn.appendChild(foodInfoBtnSvg)
 
-    addToCartBtn.appendChild(addToCartBtnSvg)
+    foodInfoBtn.addEventListener('click', () => {
+      console.log('clicked info', item.id, item.name)
+    })
 
-    foodInfoBar.appendChild(foodName)
-    foodInfoBar.appendChild(addToCartBtn)
+    foodBtns.appendChild(foodInfoBtn)
 
-    const foodDescription = document.createElement('p')
-    foodDescription.setAttribute('x-type', 'food-description')
-    foodDescription.classList.add('mt-4', 'text-gray-500')
-    foodDescription.innerHTML = item.description
+    const addToCartBtn = document.createElement('button')
+    addToCartBtn.setAttribute('x-type', 'addToCartBtn')
+    addToCartBtn.classList.add(
+      'w-full',
+      'rounded-lg',
+      'bg-primary',
+      'px-4',
+      'py-1',
+      'text-lg',
+      'font-semibold',
+      'text-white',
+      'hover:bg-secondary'
+    )
+    addToCartBtn.innerHTML = 'Add to Cart'
 
-    const foodPrice = document.createElement('p')
-    foodPrice.setAttribute('x-type', 'food-price')
+    addToCartBtn.addEventListener('click', () => {
+      console.log('clicked add', item.id, item.name)
+    })
 
-    foodPrice.classList.add('mt-4', 'text-lg', 'font-semibold')
-    foodPrice.innerHTML = item.price
+    foodBtns.appendChild(addToCartBtn)
 
-    foodInfo.appendChild(foodInfoBar)
-    foodInfo.appendChild(foodDescription)
+    foodInfo.appendChild(foodName)
     foodInfo.appendChild(foodPrice)
+    foodInfo.appendChild(foodBtns)
 
     foodItem.appendChild(foodImage)
     foodItem.appendChild(foodInfo)
@@ -334,14 +314,14 @@ const getFoodItems = async () => {
   const data = await response.json()
   foodItems = data
 
-  renderFoodItems(data, filter)
+  renderFoodItems2(data, filter)
 }
 
 filterBtns[0].checked = true
 filterBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     const filter = getFilter()
-    renderFoodItems(foodItems, filter)
+    renderFoodItems2(foodItems, filter)
   })
 })
 

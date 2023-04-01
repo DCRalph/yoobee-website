@@ -4,34 +4,37 @@ const prisma = new PrismaClient()
 import { nanoid } from 'nanoid'
 
 const valaidateSesion = async (req, res, next) => {
-  let token = req.cookies.token
   req.IP = req.headers['x-forwarded-for'] || req.socket.remoteAddress
-  req.token = token
+  req.token = req.cookies.token
   req.session = null
   req.account = null
 
-  if (typeof token == 'undefined' || token.length != 16) {
-    token = nanoid(16)
-    req.token = token
+  if (typeof req.token == 'undefined' || req.token.length != 16) {
+    // console.log(req.url, 'no token')
+    req.token = nanoid(16)
 
-    res.cookie('token', token, {
+    res.cookie('token', req.token, {
       maxAge: 1000 * 60 * 60 * 24 * 365,
     })
   }
 
   const getSession = await prisma.session.findUnique({
     where: {
-      token: token,
+      token: req.token,
     },
     include: {
       account: true,
     },
   })
 
+  req.session = getSession
+
   if (getSession == null) {
+    // console.log(req.url, 'no session')
+
     const createSession = await prisma.session.create({
       data: {
-        token: token,
+        token: req.token,
         ip: req.IP,
         cart: [],
       },
@@ -41,12 +44,10 @@ const valaidateSesion = async (req, res, next) => {
     return next()
   }
 
-  req.session = getSession
-
-  if (getSession.ip != req.IP) {
+  if (req.session.ip != req.IP) {
     const updateSessionIp = await prisma.session.update({
       where: {
-        id: getSession.id,
+        id: req.session.id,
       },
       include: {
         account: true,

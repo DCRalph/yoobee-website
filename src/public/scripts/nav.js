@@ -114,26 +114,11 @@ const updateCartNumber = (number) => {
 }
 
 const main = async () => {
-  let userData = fetch('/api/me')
-  let userCart = fetch('/api/cart')
+  let userData = await fetch('/api/me')
+  let userCart = await fetch('/api/cart')
 
-  const allUserData = await Promise.allSettled([userData, userCart])
-  console.log(allUserData[0], allUserData[1])
-
-  if (
-    allUserData[0].status !== 'fulfilled' ||
-    allUserData[1].status !== 'fulfilled'
-  ) {
-    alert('Error')
-    window.location.reload()
-    return
-  }
-
-  const dataToJson = await Promise.allSettled(
-    allUserData.map((data) => data.value.json())
-  )
-  userData = dataToJson[0].value
-  userCart = dataToJson[1].value
+  userData = await userData.json()
+  userCart = await userCart.json()
 
   console.log(userData, userCart)
 
