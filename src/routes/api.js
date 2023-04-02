@@ -130,14 +130,6 @@ router.post('/login', valaidateSession, async (req, res) => {
         connect: {
           id: authenticateAccount.id,
         },
-        // update: {
-        //   where: {
-        //     id: authenticateAccount.id,
-        //   },
-        //   data: {
-        //     cart: req.session.cart,
-        //   },
-        // },
       },
     },
   })
