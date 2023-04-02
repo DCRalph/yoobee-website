@@ -23,6 +23,10 @@ app.use(express.json())
 app.use('/api', api)
 app.use('/', staticFiles)
 
+app.get('/favicon.ico', (req, res) => {
+  res.status(200).sendFile(`${__dirname}/public/asests/logo.png`)
+})
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`)
 })

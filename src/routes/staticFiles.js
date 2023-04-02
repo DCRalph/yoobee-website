@@ -46,6 +46,10 @@ router.get('/order', (req, res) => {
   return res.sendFile(publicDir('order.html'))
 })
 
+router.get('/product/:id(*)', (req, res) => {
+  return res.sendFile(publicDir('productInfo.html'))
+})
+
 router.get('/tailwind.css', (req, res) => {
   res.sendFile(publicDir('tailwind.css'))
 })

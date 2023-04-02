@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BurgerFuel - Account</title>
+    <title>BurgerFuel</title>
     <link rel="stylesheet" href="/tailwind.css" />
     <script src="/scripts/nav.js" defer></script>
-    <script src="/scripts/account.js" defer type="module"></script>
+    <script src="/scripts/productInfo.js" defer></script>
   </head>
-  <body class="bg-zinc-100 antialiased">
+  <body class="antialiased">
     <nav
       class="fixed top-0 z-10 flex h-16 w-full items-center bg-primary px-4 transition-all md:h-24 md:px-8">
       <div class="h-12 transition-all md:h-20">
@@ -190,96 +190,42 @@
 
     <section class="w-full pt-16 md:pt-24"></section>
 
-    <main class="flex flex-wrap justify-center gap-8 p-8">
-      <form
-        class="min-w-[16rem] overflow-hidden rounded-lg border-2 border-zinc-600 bg-zinc-800 sm:min-w-[24rem]"
-        action="/api/me/update"
-        method="POST">
-        <div class="grid grid-cols-6 gap-6 p-6 pb-0">
-          <div
-            class="col-span-6 text-center text-3xl font-extrabold text-white">
-            You
-          </div>
-
-          <div class="col-span-6 flex items-center gap-4">
-            <div>
-              <div class="text-2xl text-white" id="nameText">name</div>
-              <div class="text-base text-gray-400" id="emailText">email</div>
-            </div>
-          </div>
-
-          <div class="col-span-6 sm:col-span-3" id="emailInput">
-            <label for="email" class="text-sm text-gray-400" id="emailLabel">
-              Email
-            </label>
-            <input
-              name="email"
-              id="email"
-              placeholder="email"
-              type="email"
-              autocomplete="false"
-              required
-              class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 sm:text-sm" />
-          </div>
-
-          <div class="col-span-6 sm:col-span-3"></div>
-
-          <div class="col-span-6 sm:col-span-3" id="currentPasswordInput">
-            <label
-              for="currentPassword"
-              class="text-sm text-gray-400"
-              id="currentPasswordLable">
-              Current Password
-            </label>
-            <input
-              name="currentPassword"
-              id="currentPassword"
-              placeholder="Current Password"
-              autocomplete="false"
-              type="password"
-              class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 sm:text-sm" />
-          </div>
-
-          <div class="col col-span-6 sm:col-span-3" id="newPasswordInput">
-            <label
-              for="newPassword"
-              class="text-sm text-gray-400"
-              id="newPasswordLable">
-              Change Password
-            </label>
-            <input
-              name="newPassword"
-              id="newPassword"
-              placeholder="Change Password"
-              autocomplete="false"
-              type="password"
-              class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 sm:text-sm" />
-          </div>
-
-          <!--  -->
+    <main class="my-4 gap-4 px-4 md:my-8 md:px-16">
+      <div
+        class="grid w-full grid-cols-12 gap-4 rounded-3xl border-2 border-zinc-400 bg-zinc-800 p-8 shadow-2xl">
+        <div class="col-span-full flex w-full justify-center md:col-span-6">
+          <img
+            id="item-img"
+            src=""
+            class="w-full max-w-xl object-contain object-center" />
         </div>
-        <div class="mt-6 flex justify-between bg-zinc-700 px-6 py-4">
-          <button
-            class="flex justify-center rounded-lg bg-red-600 px-4 py-2 font-semibold text-white shadow-lg shadow-red-600/50 ring-red-500 hover:bg-red-700 active:ring-2"
-            onclick="history.back()">
-            Back
-          </button>
-
-          <button
-            class="flex justify-center rounded-lg bg-green-600 px-4 py-2 font-semibold text-white shadow-lg shadow-green-600/50 ring-green-500 hover:bg-green-700 active:ring-2"
-            onclick="window.location = '/'">
-            Home
-          </button>
-
-          <button
-            class="flex justify-center rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white shadow-lg shadow-blue-600/50 ring-blue-500 hover:bg-blue-700 active:ring-2"
-            id="saveBtn">
-            Save
-          </button>
+        <div class="col-span-full flex flex-col gap-2 text-white md:col-span-6">
+          <h2 class="text-3xl font-bold md:text-4xl" id="item-name">
+            ${item.name}
+          </h2>
+          <p
+            class="text-xl font-semibold text-gray-400 md:text-2xl"
+            id="item-price">
+            ${item.price}
+          </p>
+          <p class="text-lg font-semibold md:text-xl" id="item-description">
+            ${item.description}
+          </p>
+          <div class="mt-auto flex gap-4 pt-4">
+            <button
+              class="flex justify-center rounded-lg bg-red-600 px-4 py-2 font-semibold text-white shadow-lg shadow-red-600/50 ring-red-500 hover:bg-red-700 active:ring-2"
+              onclick="history.back()">
+              Back
+            </button>
+            <button
+              class="flex justify-center rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white shadow-lg shadow-blue-600/50 ring-blue-500 hover:bg-blue-700 active:ring-2 disabled:bg-gray-500 disabled:opacity-50 disabled:shadow-none"
+              id="item-add"
+              disabled>
+              Add to Cart
+            </button>
+          </div>
         </div>
-      </form>
-
-      <!-- end -->
+      </div>
     </main>
 
     <section class="col-span-full mt-auto h-2 bg-primary"></section>

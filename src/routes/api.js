@@ -354,4 +354,68 @@ router.post('/cart/add', valaidateSession, async (req, res) => {
   return res.status(200).json({ message: 'ok' })
 })
 
+router.post('/cart/remove', valaidateSession, async (req, res) => {
+  if (!req.session) return res.status(401).json({ message: 'no session' })
+
+  let body
+
+  const v = z.object({
+    foodId: z.string(),
+  })
+
+  try {
+    body = v.parse(req.body)
+  } catch (err) {
+    console.log(err)
+
+    return res.status(401).json({ message: 'Input error' })
+  }
+
+  const foodId = body.foodId
+
+  let cart =
+    req.session.account == null ? req.session.cart : req.session.account.cart
+
+  let updated = false
+
+  cart = cart.filter((item) => {
+    if (item.foodId == foodId) {
+      updated = true
+      return false
+    }
+    return true
+  })
+
+  if (!updated) {
+    return res.status(401).json({ message: 'item not in cart' })
+  }
+
+  let update
+
+  if (req.session.account) {
+    update = await prisma.account.update({
+      where: {
+        id: req.session.account.id,
+      },
+      data: {
+        cart: cart,
+      },
+    })
+  } else {
+    update = await prisma.session.update({
+      where: {
+        id: req.session.id,
+      },
+      data: {
+        cart: cart,
+      },
+    })
+  }
+
+  if (!update)
+    return res.status(401).json({ message: 'remove from cart failed' })
+
+  return res.status(200).json({ message: 'ok' })
+})
+
 export default router

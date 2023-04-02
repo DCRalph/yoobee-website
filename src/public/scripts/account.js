@@ -17,10 +17,10 @@ const newPassword = document.querySelector('#newPassword')
 const main = async (account) => {
   console.log(account)
 
-  nameText.innerHTML = account.name
-  emailText.innerHTML = account.email
+  nameText.innerHTML = account.account.name
+  emailText.innerHTML = account.account.email
 
-  email.value = account.email
+  email.value = account.account.email
 }
 
 fetch('/api/me').then(async (res) => {
