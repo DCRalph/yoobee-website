@@ -286,13 +286,13 @@ router.get('/cart', valaidateSession, async (req, res) => {
   return res.status(401).json({ message: 'no account or session' })
 })
 
-router.post('/cart/add', valaidateSession, (req, res) => {
+router.post('/cart/add', valaidateSession, async (req, res) => {
   if (!req.session) return res.status(401).json({ message: 'no session' })
 
   let body
 
   const v = z.object({
-    foodId: z.number(),
+    foodId: z.string(),
     quantity: z.number(),
   })
 
@@ -307,7 +307,51 @@ router.post('/cart/add', valaidateSession, (req, res) => {
   const foodId = body.foodId
   const quantity = body.quantity
 
-  console.log(foodId, quantity)
+  const cart =
+    req.session.account == null ? req.session.cart : req.session.account.cart
+
+  let updated = false
+
+  cart.forEach((item) => {
+    if (item.foodId == foodId) {
+      item.quantity += quantity
+      updated = true
+      return
+    }
+  })
+
+  if (!updated) {
+    cart.push({
+      foodId: foodId,
+      quantity: quantity,
+    })
+  }
+
+  let update
+
+  if (req.session.account) {
+    update = await prisma.account.update({
+      where: {
+        id: req.session.account.id,
+      },
+      data: {
+        cart: cart,
+      },
+    })
+  } else {
+    update = await prisma.session.update({
+      where: {
+        id: req.session.id,
+      },
+      data: {
+        cart: cart,
+      },
+    })
+  }
+
+  if (!update) return res.status(401).json({ message: 'add to cart failed' })
+
+  return res.status(200).json({ message: 'ok' })
 })
 
 export default router

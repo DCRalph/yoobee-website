@@ -11,6 +11,55 @@ const getFilter = () => {
   return category
 }
 
+const addToCart = async (id, quantity, btn) => {
+  const saveBtn = btn
+
+  btn.disabled = true
+
+  let btnDots = 0
+
+  let btnDotsInterval = setInterval(() => {
+    if (btnDots <= 3) {
+      saveBtn.innerHTML = 'Adding' + '.'.repeat(btnDots)
+      btnDots++
+    } else {
+      btnDots = 0
+    }
+  }, 200)
+
+  const addToCartReq = await fetch('/api/cart/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      foodId: id,
+      quantity: quantity,
+    }),
+  })
+
+  clearInterval(btnDotsInterval)
+
+  if (addToCartReq.status != 200) {
+    saveBtn.innerHTML = 'Error'
+  } else {
+    saveBtn.innerHTML = 'Added'
+  }
+
+  const cart = await fetch('/api/cart')
+  const cartData = await cart.json()
+  console.log(cartData)
+
+  let x = [{ x: 2 }, { x: 3 }, { x: 4 }]
+
+  const cartCount = document.querySelector('#cart-number')
+  cartCount.innerHTML = cartData.reduce((acc, item) => acc + item.quantity, 0)
+
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  saveBtn.innerHTML = 'Add to Cart'
+  btn.disabled = false
+}
+
 const renderFoodItems = (foodItems, filter) => {
   foodItemsContainer.innerHTML = ''
 
@@ -177,6 +226,7 @@ const renderFoodItems2 = (items, filter) => {
 
     const foodItem = document.createElement('div')
     foodItem.setAttribute('x-type', 'foodItem')
+    foodItem.setAttribute('x-id', item.id)
     // foodItem.setAttribute('href', `/order/product/${item.id}`)
     foodItem.classList.add(
       'group',
@@ -232,7 +282,6 @@ const renderFoodItems2 = (items, filter) => {
     const foodInfoBtn = document.createElement('button')
     foodInfoBtn.setAttribute('x-type', 'foodInfoBtn')
     foodInfoBtn.classList.add(
-      // 'w-full',
       'rounded-lg',
       'bg-zinc-500',
       'p-1',
@@ -272,6 +321,7 @@ const renderFoodItems2 = (items, filter) => {
 
     foodInfoBtn.addEventListener('click', () => {
       console.log('clicked info', item.id, item.name)
+      addToCart(item.id, 1)
     })
 
     foodBtns.appendChild(foodInfoBtn)
@@ -287,12 +337,15 @@ const renderFoodItems2 = (items, filter) => {
       'text-lg',
       'font-semibold',
       'text-white',
-      'hover:bg-secondary'
+      'hover:bg-secondary',
+      'disabled:opacity-50',
+      'disabled:cursor-not-allowed'
     )
     addToCartBtn.innerHTML = 'Add to Cart'
 
     addToCartBtn.addEventListener('click', () => {
       console.log('clicked add', item.id, item.name)
+      addToCart(item.id, 1, addToCartBtn)
     })
 
     foodBtns.appendChild(addToCartBtn)
