@@ -137,17 +137,19 @@ router.post('/login', valaidateSession, async (req, res) => {
   if (!updateSession)
     return res.status(401).json({ message: 'login failed', code: 2 })
 
-  const updateAccount = await prisma.account.update({
-    where: {
-      id: authenticateAccount.id,
-    },
-    data: {
-      cart: req.session.cart,
-    },
-  })
+  if (updateSession.cart.length > 0) {
+    const updateAccount = await prisma.account.update({
+      where: {
+        id: authenticateAccount.id,
+      },
+      data: {
+        cart: req.session.cart,
+      },
+    })
 
-  if (!updateAccount)
-    return res.status(401).json({ message: 'login failed', code: 3 })
+    if (!updateAccount)
+      return res.status(401).json({ message: 'login failed', code: 3 })
+  }
 
   return res.status(200).json({ message: 'ok' })
 })
