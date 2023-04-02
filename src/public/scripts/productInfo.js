@@ -68,7 +68,7 @@ const getItem = async () => {
 
   itemImage.src = `/asests/food/${data.image}`
   itemTitle.textContent = data.name
-  itemPrice.textContent = `$${data.price}`
+  itemPrice.textContent = `$${data.price.toFixed(2)}`
   itemDescription.textContent = data.description
 
   headTitle.textContent = `BurgerFuel | ${data.name}`

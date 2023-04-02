@@ -277,7 +277,7 @@ const renderFoodItems2 = (items, filter) => {
     const foodPrice = document.createElement('p')
     foodPrice.setAttribute('x-type', 'foodPrice')
     foodPrice.classList.add('text-lg', 'font-medium', 'text-zinc-900')
-    foodPrice.innerHTML = `$${item.price}`
+    foodPrice.innerHTML = `$${item.price.toFixed(2)}`
 
     const foodBtns = document.createElement('div')
     foodBtns.setAttribute('x-type', 'foodBtns')
