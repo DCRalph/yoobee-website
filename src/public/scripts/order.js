@@ -234,7 +234,11 @@ const renderFoodItems2 = (items, filter) => {
     // foodItem.setAttribute('href', `/order/product/${item.id}`)
     foodItem.classList.add(
       'group',
-      'col-span-3',
+      'col-span-12',
+      'sm:col-span-6',
+      'md:col-span-4',
+      'lg:col-span-3',
+      // 'xl:col-span-2',
       'overflow-hidden',
       'rounded-lg',
       'bg-zinc-300',
