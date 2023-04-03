@@ -3,6 +3,17 @@ const foodItemsContainer = document.querySelector('#food-items-container')
 
 let foodItems = []
 
+let spinner = `<svg  class="w-6 h-6 mr-2  animate-spin text-white fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+</svg>`
+let check = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-green-600">
+<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>`
+let error = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-600">
+<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+</svg>`
+
 const getFilter = () => {
   const filter = [...document.querySelectorAll('input[name="category"]')]
   const btn = filter.find((input) => input.checked)
@@ -12,20 +23,8 @@ const getFilter = () => {
 }
 
 const addToCart = async (id, quantity, btn) => {
-  const saveBtn = btn
-
   btn.disabled = true
-
-  let btnDots = 0
-
-  let btnDotsInterval = setInterval(() => {
-    if (btnDots <= 3) {
-      saveBtn.innerHTML = 'Adding' + '.'.repeat(btnDots)
-      btnDots++
-    } else {
-      btnDots = 0
-    }
-  }, 200)
+  btn.innerHTML = spinner + 'Adding'
 
   const addToCartReq = await fetch('/api/cart/add', {
     method: 'POST',
@@ -34,16 +33,14 @@ const addToCart = async (id, quantity, btn) => {
     },
     body: JSON.stringify({
       foodId: id,
-      quantity: quantity,
+      quantity: Number(quantity),
     }),
   })
 
-  clearInterval(btnDotsInterval)
-
   if (addToCartReq.status != 200) {
-    saveBtn.innerHTML = 'Error'
+    btn.innerHTML = error + 'Error'
   } else {
-    saveBtn.innerHTML = 'Added'
+    btn.innerHTML = check + 'Added'
   }
 
   const cart = await fetch('/api/cart')
@@ -52,175 +49,13 @@ const addToCart = async (id, quantity, btn) => {
 
   updateCart(cartData, foodItemsList)
 
-  const cartCount = document.querySelector('#cart-number')
-  cartCount.innerHTML = cartData.reduce((acc, item) => acc + item.quantity, 0)
-
   await new Promise((resolve) => setTimeout(resolve, 1000))
-  saveBtn.innerHTML = 'Add to Cart'
+  btn.innerHTML = 'Add to cart'
   btn.disabled = false
 }
 
 const openInfoPage = async (id) => {
   window.location = '/product/' + id
-}
-
-const renderFoodItems = (foodItems, filter) => {
-  foodItemsContainer.innerHTML = ''
-
-  foodItems.forEach((item) => {
-    console.log(item.category, filter)
-    if (filter !== 'all' && !item.category.includes(filter)) return
-
-    const foodItem = document.createElement('div')
-    foodItem.setAttribute('x-type', 'food-item')
-    foodItem.setAttribute('x-id', item.id)
-
-    foodItem.classList.add(
-      'col-span-full',
-      'grid',
-      'h-64',
-      'w-full',
-      'grid-cols-3',
-      'gap-2',
-      'rounded-xl',
-      'bg-gray-200',
-      'p-2',
-      'lg:col-span-6'
-    )
-
-    const foodImage = document.createElement('img')
-    foodImage.setAttribute('x-type', 'food-image')
-
-    foodImage.src = `/asests/food/${item.image}`
-    foodImage.classList.add('col-span-1', 'h-full', 'w-full', 'object-contain')
-
-    const foodInfo = document.createElement('div')
-    foodInfo.setAttribute('x-type', 'food-info')
-    foodInfo.classList.add('col-span-2')
-
-    const foodInfoBar = document.createElement('div')
-    foodInfoBar.setAttribute('x-type', 'food-info-bar')
-    foodInfoBar.classList.add('flex', 'h-20', 'w-full', 'gap-2')
-
-    const foodName = document.createElement('div')
-    foodName.setAttribute('x-type', 'food-name')
-    foodName.classList.add(
-      'flex',
-      'w-full',
-      'items-center',
-      'justify-between',
-      'rounded-lg',
-      'bg-gray-300',
-      'py-2',
-      'px-4'
-    )
-
-    const foodNameText = document.createElement('h2')
-    foodNameText.setAttribute('x-type', 'food-name-text')
-    foodNameText.classList.add('text-3xl', 'font-semibold')
-    foodNameText.innerHTML = item.name
-
-    const foodPrice = document.createElement('h2')
-    foodPrice.setAttribute('x-type', 'food-price')
-    foodPrice.classList.add('font-base', 'text-lg', 'text-gray-700')
-    foodPrice.innerHTML = `$${item.price}`
-
-    foodName.appendChild(foodNameText)
-    // foodName.appendChild(foodPrice)
-
-    const addToCartBtn = document.createElement('button')
-    addToCartBtn.setAttribute('x-type', 'add-to-cart-btn')
-    addToCartBtn.classList.add(
-      'flex',
-      'rounded-lg',
-      'p-2',
-      'aspect-square',
-      'h-full',
-      'text-sm',
-      'text-black',
-      'bg-yellow-400',
-      'hover:bg-yellow-500',
-      'focus:outline-none',
-      'focus:ring-2',
-      'focus:ring-yellow-400',
-      'focus:ring-opacity-50'
-    )
-
-    const addToCartBtnSvg = document.createElementNS(
-      'http://www.w3.org/2000/svg',
-      'svg'
-    )
-
-    addToCartBtnSvg.setAttribute('fill', 'none')
-    addToCartBtnSvg.setAttribute('viewBox', '0 0 24 24')
-    addToCartBtnSvg.setAttribute('stroke-width', '1.5')
-    addToCartBtnSvg.setAttribute('stroke', 'currentColor')
-    addToCartBtnSvg.classList.add('w-full', 'h-full')
-
-    const addToCartBtnSvgPath = document.createElementNS(
-      'http://www.w3.org/2000/svg',
-      'path'
-    )
-    addToCartBtnSvgPath.setAttribute('stroke-linecap', 'round')
-    addToCartBtnSvgPath.setAttribute('stroke-linejoin', 'round')
-
-    addToCartBtnSvgPath.setAttribute(
-      'd',
-      'M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-    )
-
-    addToCartBtnSvg.appendChild(addToCartBtnSvgPath)
-    addToCartBtn.appendChild(addToCartBtnSvg)
-
-    addToCartBtn.addEventListener('click', () => {
-      console.log('clicked', item.id, item.name)
-    })
-
-    // addToCartBtn.addEventListener('click', () => {
-    //   const cartItem = {
-    //     id: item.id,
-    //     name: item.name,
-    //     price: item.price,
-    //     quantity: 1,
-    //   }
-    //   const cart = JSON.parse(localStorage.getItem('cart')) || []
-    //   const existingItem = cart.find((item) => item.id === cartItem.id)
-    //   if (existingItem) {
-    //     existingItem.quantity += 1
-    //   } else {
-    //     cart.push(cartItem)
-    //   }
-    //   localStorage.setItem('cart', JSON.stringify(cart))
-    // })
-
-    const foodDescription = document.createElement('div')
-    foodDescription.setAttribute('x-type', 'food-description')
-    foodDescription.classList.add('mt-4')
-
-    const foodDescriptionTitle = document.createElement('p')
-    foodDescriptionTitle.setAttribute('x-type', 'food-description-title')
-    foodDescriptionTitle.classList.add('text-lg', 'font-semibold')
-    foodDescriptionTitle.innerHTML = 'Description'
-
-    const foodDescriptionText = document.createElement('p')
-    foodDescriptionText.setAttribute('x-type', 'food-description-text')
-    foodDescriptionText.classList.add('text-lg', 'text-gray-700')
-    foodDescriptionText.innerHTML = item.description
-
-    foodDescription.appendChild(foodDescriptionTitle)
-    foodDescription.appendChild(foodDescriptionText)
-
-    foodInfoBar.appendChild(foodName)
-    // foodInfoBar.appendChild(addToCartBtn)
-
-    foodInfo.appendChild(foodInfoBar)
-    foodInfo.appendChild(foodDescription)
-
-    foodItem.appendChild(foodImage)
-    foodItem.appendChild(foodInfo)
-
-    foodItemsContainer.appendChild(foodItem)
-  })
 }
 
 const renderFoodItems2 = (items, filter) => {
@@ -289,15 +124,7 @@ const renderFoodItems2 = (items, filter) => {
 
     const foodInfoBtn = document.createElement('button')
     foodInfoBtn.setAttribute('x-type', 'foodInfoBtn')
-    foodInfoBtn.classList.add(
-      'rounded-lg',
-      'bg-zinc-500',
-      'p-1',
-      'text-lg',
-      'font-semibold',
-      'text-white',
-      'hover:bg-zinc-600'
-    )
+    foodInfoBtn.classList.add('btn-blue', '!p-1')
 
     foodInfoBtn.addEventListener('click', () => {
       console.log('clicked', item.id, item.name)
@@ -336,19 +163,7 @@ const renderFoodItems2 = (items, filter) => {
 
     const addToCartBtn = document.createElement('button')
     addToCartBtn.setAttribute('x-type', 'addToCartBtn')
-    addToCartBtn.classList.add(
-      'w-full',
-      'rounded-lg',
-      'bg-primary',
-      'px-4',
-      'py-1',
-      'text-lg',
-      'font-semibold',
-      'text-white',
-      'hover:bg-secondary',
-      'disabled:opacity-50',
-      'disabled:cursor-not-allowed'
-    )
+    addToCartBtn.classList.add('btn-primary', 'w-full')
     addToCartBtn.innerHTML = 'Add to Cart'
 
     addToCartBtn.addEventListener('click', () => {

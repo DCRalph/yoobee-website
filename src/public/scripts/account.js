@@ -1,5 +1,3 @@
-import customAlert from './modules/alert.js'
-
 const Alert = new customAlert('#alerts')
 
 const form = document.querySelector('form')
@@ -14,7 +12,9 @@ const email = document.querySelector('#email')
 const currentPassword = document.querySelector('#currentPassword')
 const newPassword = document.querySelector('#newPassword')
 
-const main = async (account) => {
+const mainAccount = async () => {
+  const account = await (await fetch('/api/me')).json()
+
   console.log(account)
 
   nameText.innerHTML = account.account.name
@@ -22,11 +22,6 @@ const main = async (account) => {
 
   email.value = account.account.email
 }
-
-fetch('/api/me').then(async (res) => {
-  const json = await res.json()
-  main(json)
-})
 
 form.addEventListener('submit', (e) => {
   e.preventDefault()
@@ -59,3 +54,5 @@ form.addEventListener('submit', (e) => {
     }
   })
 })
+
+mainAccount()

@@ -23,6 +23,41 @@ body {
   @apply bg-opacity-30 transition-all hover:bg-opacity-50;
 }
 
-.btn-purple {
-  @apply rounded-full bg-primary px-4 py-2 text-2xl font-semibold text-white transition-colors hover:bg-secondary;
+.btn-red {
+  @apply flex justify-center rounded-lg bg-red-600 px-4 py-2 font-semibold text-white shadow-lg shadow-red-600/50 ring-red-500 hover:bg-red-700 active:ring-2;
+}
+
+.btn-blue {
+  @apply flex justify-center rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white shadow-lg shadow-blue-600/50 ring-blue-500 hover:bg-blue-700 active:ring-2;
+}
+
+.btn-green {
+  @apply flex justify-center rounded-lg bg-green-600 px-4 py-2 font-semibold text-white shadow-lg shadow-green-600/50 ring-green-500 hover:bg-green-700 active:ring-2;
+}
+
+.btn-yellow {
+  @apply flex justify-center rounded-lg bg-yellow-600 px-4 py-2 font-semibold text-white shadow-lg shadow-yellow-600/50 ring-yellow-500 hover:bg-yellow-700 active:ring-2;
+}
+
+.btn-orange {
+  @apply flex justify-center rounded-lg bg-orange-600 px-4 py-2 font-semibold text-white shadow-lg shadow-orange-600/50 ring-orange-500 hover:bg-orange-700 active:ring-2;
+}
+
+.btn-primary {
+  @apply flex justify-center rounded-lg bg-primary px-4 py-2 font-semibold text-white shadow-lg shadow-primary/50 ring-primary hover:bg-secondary active:ring-2 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:shadow-none;
+}
+
+.btn-gray {
+  @apply flex justify-center rounded-lg bg-gray-600 px-4 py-2 font-semibold text-white shadow-lg shadow-gray-600/50 ring-gray-500 hover:bg-gray-700 active:ring-2;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

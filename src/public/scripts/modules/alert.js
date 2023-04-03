@@ -1,52 +1,3 @@
-const Alert_ = (message) => {
-  const TIME = 5000
-
-  const alertBox = document.querySelector('#alerts')
-  const alert = document.createElement('div')
-  alert.classList.add(
-    'bg-red-100',
-    'rounded-lg',
-    'py-4',
-    'px-6',
-    'mb-4',
-    'text-base',
-    'text-red-700',
-    'overflow-hidden',
-    'relative'
-  )
-  alert.innerHTML = message
-  const bar = document.createElement('div')
-
-  bar.classList.add(
-    'absolute',
-    'bottom-0',
-    'left-0',
-    'bg-red-700',
-    'rounded',
-    'h-2'
-  )
-  bar.style.width = '100%'
-  alert.appendChild(bar)
-
-  alertBox.appendChild(alert)
-
-  const added = new Date().getTime()
-
-  const updateBar = () => {
-    const now = new Date().getTime()
-    const diff = now - added
-    const percent = 100 - (diff / TIME) * 100
-    bar.style.width = `${percent}%`
-    if (diff < TIME) {
-      requestAnimationFrame(updateBar)
-    } else {
-      alert.remove()
-    }
-  }
-
-  updateBar()
-}
-
 class customAlert {
   constructor(elementId) {
     this.element = document.querySelector(elementId)
@@ -135,5 +86,3 @@ class customAlert {
     }, 300)
   }
 }
-
-export default customAlert

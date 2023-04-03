@@ -1,5 +1,3 @@
-import customAlert from './modules/alert.js'
-
 const Alert = new customAlert('#alerts')
 
 const form = document.querySelector('form')

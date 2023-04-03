@@ -1,6 +1,12 @@
 const accountMenuButton = document.querySelector('#account-menu-button')
 const accountMenu = document.querySelector('#account-menu')
 
+const mobileMenuButton = document.querySelector('#mobile-menu-button')
+const mobileMenuCloseButton = document.querySelector(
+  '#mobile-menu-close-button'
+)
+const mobileMenu = document.querySelector('#mobile-menu')
+
 const cartNumber = document.querySelector('#cart-number')
 const cartButton = document.querySelector('#cart-btn')
 
@@ -12,44 +18,11 @@ const cartItems = document.querySelector('#cartItems')
 const checkout = document.querySelector('#checkout')
 
 let accountMenuOpen = false
+let mobileMenuOpen = false
 let cartOpen = false
 
 let foodItemsList = []
 let cart = []
-
-accountMenuButton.addEventListener('click', async () => {
-  accountMenuOpen = !accountMenuOpen
-
-  // Entering: "transition ease-out duration-100"
-  //   From: "transform opacity-0 scale-95"
-  //   To: "transform opacity-100 scale-100"
-
-  // Leaving: "transition ease-in duration-75"
-  //   From: "transform opacity-100 scale-100"
-  //   To: "transform opacity-0 scale-95"
-
-  if (accountMenuOpen) {
-    accountMenu.classList.remove('hidden')
-
-    await new Promise((res) => setTimeout(res, 0))
-
-    accountMenu.classList.remove('transition', 'ease-in', 'duration-75')
-    accountMenu.classList.add('transition', 'ease-out', 'duration-100')
-
-    accountMenu.classList.remove('transform', 'opacity-0', 'scale-75')
-    accountMenu.classList.add('transform', 'opacity-100', 'scale-100')
-  } else {
-    accountMenu.classList.remove('transition', 'ease-out', 'duration-100')
-    accountMenu.classList.add('transition', 'ease-in', 'duration-75')
-
-    accountMenu.classList.remove('transform', 'opacity-100', 'scale-100')
-    accountMenu.classList.add('transform', 'opacity-0', 'scale-75')
-
-    setTimeout(() => {
-      accountMenu.classList.add('hidden')
-    }, 200)
-  }
-})
 
 const makeAccountDropdown = (logedIn) => {
   let a
@@ -124,7 +97,7 @@ const makeAccountDropdown = (logedIn) => {
 const delCart = async (id) => {
   cart = cart.filter((item) => item.id !== id)
 
-  const req = await fetch('/api/cart/remove', {
+  await fetch('/api/cart/remove', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -132,7 +105,8 @@ const delCart = async (id) => {
     body: JSON.stringify({ foodId: id }),
   })
 
-  const res2 = await req.json()
+  let userCart = await (await fetch('/api/cart')).json()
+  updateCart(userCart, foodItemsList)
 }
 
 const makeCartItem = (item, quantity) => {
@@ -165,11 +139,8 @@ const makeCartItem = (item, quantity) => {
     'items-center'
   )
 
-  button.addEventListener('click', async () => {
-    await delCart(item.id)
-
-    let userCart = await (await fetch('/api/cart')).json()
-    updateCart(userCart, foodItemsList)
+  button.addEventListener('click', () => {
+    delCart(item.id)
   })
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -219,16 +190,17 @@ const makeCartItem = (item, quantity) => {
 const updateCart = (cart, items) => {
   cartItems.innerHTML = ''
   let number = 0
+  let total = 0
 
   if (cart.length == 0) {
     const div = document.createElement('div')
     div.classList.add('flex', 'justify-center', 'items-center')
 
-    const name = document.createElement('p')
-    name.classList.add('text-lg', 'font-bold', 'text-gray-600')
-    name.innerHTML = 'Cart is empty'
+    const empty = document.createElement('p')
+    empty.classList.add('text-lg', 'font-bold', 'text-gray-600')
+    empty.innerHTML = 'Cart is empty'
 
-    div.appendChild(name)
+    div.appendChild(empty)
 
     cartItems.appendChild(div)
   }
@@ -238,49 +210,108 @@ const updateCart = (cart, items) => {
     const div = document.createElement('div')
     div.classList.add('flex', 'justify-between', 'items-center', 'mb-2')
 
-    const cartItem1 = makeCartItem(foodItem, item.quantity)
     number += item.quantity
+    total += foodItem.price * item.quantity
 
-    cartItems.appendChild(cartItem1)
+    cartItems.appendChild(makeCartItem(foodItem, item.quantity))
   })
+
   cartNumber.innerHTML = number
   cartNumber2.innerHTML = number
 
   checkout.removeAttribute('disabled')
+  checkout.innerHTML = `Checkout ($${total})`
 }
 
 const main = async () => {
-  let items = fetch('/api/food-items')
-
   let userData = await fetch('/api/me')
   let userCart = await fetch('/api/cart')
+  let items = await fetch('/api/food-items')
 
   userData = await userData.json()
   cart = await userCart.json()
+  items = await items.json()
 
   console.log(userData, userCart)
 
-  items.then((res) => {
-    res.json().then((data) => {
-      foodItemsList = data
+  foodItemsList = items
 
-      updateCart(cart, foodItemsList)
-    })
-  })
-
+  updateCart(cart, foodItemsList)
   makeAccountDropdown(userData.logedIn)
 }
 
-main()
+const openUserMenu = async (state = null) => {
+  accountMenuOpen = state == null ? !accountMenuOpen : state
 
-const openCart = () => {
-  cartOpen = !cartOpen
-  if (cartOpen) {
-    cartContent.classList.remove('translate-x-[25rem]')
+  state == null && openCart(false)
+
+  // Entering: "transition ease-out duration-100"
+  //   From: "transform opacity-0 scale-95"
+  //   To: "transform opacity-100 scale-100"
+
+  // Leaving: "transition ease-in duration-75"
+  //   From: "transform opacity-100 scale-100"
+  //   To: "transform opacity-0 scale-95"
+
+  if (accountMenuOpen) {
+    accountMenu.classList.remove('hidden')
+
+    await new Promise((res) => setTimeout(res, 0))
+
+    accountMenu.classList.remove('transition', 'ease-in', 'duration-75')
+    accountMenu.classList.add('transition', 'ease-out', 'duration-100')
+
+    accountMenu.classList.remove('transform', 'opacity-0', 'scale-75')
+    accountMenu.classList.add('transform', 'opacity-100', 'scale-100')
   } else {
-    cartContent.classList.add('translate-x-[25rem]')
+    accountMenu.classList.remove('transition', 'ease-out', 'duration-100')
+    accountMenu.classList.add('transition', 'ease-in', 'duration-75')
+
+    accountMenu.classList.remove('transform', 'opacity-100', 'scale-100')
+    accountMenu.classList.add('transform', 'opacity-0', 'scale-75')
+
+    setTimeout(() => {
+      accountMenu.classList.add('hidden')
+    }, 200)
   }
 }
 
-cartButton.addEventListener('click', openCart)
-cartButton2.addEventListener('click', openCart)
+const openMobileMenu = async (state = null) => {
+  mobileMenuOpen = state == null ? !mobileMenuOpen : state
+
+  state == null && openUserMenu(false)
+
+  if (mobileMenuOpen) {
+    mobileMenu.classList.add('right-0', 'top-0')
+  } else {
+    mobileMenu.classList.remove('right-0', 'top-0')
+  }
+}
+
+const openCart = (state = null) => {
+  cartOpen = state == null ? !cartOpen : state
+
+  state == null && openUserMenu(false)
+
+  if (cartOpen) {
+    cartContent.classList.remove('translate-x-full')
+  } else {
+    cartContent.classList.add('translate-x-full')
+  }
+}
+
+accountMenuButton.addEventListener('click', () => openUserMenu())
+
+mobileMenuButton.addEventListener('click', () => {
+  openMobileMenu()
+  openCart(false)
+})
+mobileMenuCloseButton.addEventListener('click', () => {
+  openMobileMenu()
+  openCart(false)
+})
+
+cartButton.addEventListener('click', () => openCart())
+cartButton2.addEventListener('click', () => openCart())
+
+main()
