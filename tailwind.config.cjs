@@ -4,11 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#D55CFF',
-        secondary: '#9936BC',
-        'secondary-dark': '#7A2C9B',
+        primary: '#664898',
+        secondary: '#463168',
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }

@@ -17,6 +17,8 @@ const cartContent = document.querySelector('#cartContent')
 const cartItems = document.querySelector('#cartItems')
 const checkout = document.querySelector('#checkout')
 
+const toTop = document.querySelector('#toTop')
+
 let accountMenuOpen = false
 let mobileMenuOpen = false
 let cartOpen = false
@@ -313,5 +315,18 @@ mobileMenuCloseButton.addEventListener('click', () => {
 
 cartButton.addEventListener('click', () => openCart())
 cartButton2.addEventListener('click', () => openCart())
+
+document.onscroll = () => {
+  // console.log(window.pageYOffset)
+  if (window.pageYOffset >= 200) {
+    toTop.classList.remove('md:translate-y-20')
+    toTop.classList.remove('translate-y-24')
+    toTop.classList.add('translate-y-0')
+  } else {
+    toTop.classList.add('md:translate-y-20')
+    toTop.classList.add('translate-y-24')
+    toTop.classList.remove('translate-y-0')
+  }
+}
 
 main()
