@@ -220,7 +220,7 @@ const updateCart = (cart, items) => {
   cartNumber2.innerHTML = number
 
   checkout.removeAttribute('disabled')
-  checkout.innerHTML = `Checkout ($${total})`
+  checkout.innerHTML = `Checkout ($${total.toFixed(2)})`
 }
 
 const main = async () => {
