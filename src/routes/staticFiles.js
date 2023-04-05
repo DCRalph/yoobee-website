@@ -20,6 +20,10 @@ const readFile = (f) => {
   return parse(fileData)
 }
 
+router.get('/robots.txt', (req, res) => {
+  res.sendFile(publicDir('robots.txt'))
+})
+
 router.get('/', (req, res) => {
   // res.sendFile(publicDir('index.html'))
 
