@@ -9,7 +9,9 @@ const passwordNotMatch = document.querySelector('#password-not-match')
 const checkPassword = () => {
   if (password.value != passwordConfirm.value && passwordConfirm.value != '') {
     passwordNotMatch.classList.remove('hidden')
+    passwordNotMatch.classList.add('flex')
   } else {
+    passwordNotMatch.classList.remove('flex')
     passwordNotMatch.classList.add('hidden')
   }
 }

@@ -259,6 +259,7 @@ const openUserMenu = async (state = null) => {
 
   if (accountMenuOpen) {
     accountMenu.classList.remove('hidden')
+    accountMenu.classList.add('flex')
 
     await new Promise((res) => setTimeout(res, 0))
 
@@ -275,6 +276,7 @@ const openUserMenu = async (state = null) => {
     accountMenu.classList.add('transform', 'opacity-0', 'scale-75')
 
     setTimeout(() => {
+      accountMenu.classList.remove('flex')
       accountMenu.classList.add('hidden')
     }, 200)
   }
