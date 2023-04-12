@@ -41,7 +41,7 @@ router.get('/login', valaidateSession, (req, res) => {
   if (req.session.account) {
     return res.redirect('/account')
   } else {
-    return res.sendFile(publicDir('login.html'))
+    return res.send(readFile(publicDir('login.html')))
   }
 })
 
@@ -49,7 +49,7 @@ router.get('/register', valaidateSession, (req, res) => {
   if (req.session.account) {
     return res.redirect('/account')
   } else {
-    return res.sendFile(publicDir('register.html'))
+    return res.send(readFile(publicDir('register.html')))
   }
 })
 

@@ -218,6 +218,8 @@ const updateCart = (cart, items) => {
     cartItems.appendChild(makeCartItem(foodItem, item.quantity))
   })
 
+  number = number > 99 ? '99+' : number
+
   cartNumber.innerHTML = number
   cartNumber2.innerHTML = number
 

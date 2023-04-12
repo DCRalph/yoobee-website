@@ -71,3 +71,20 @@ body {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+.social-hover {
+  @apply scale-100 text-white transition-transform hover:scale-125;
+}
+
+.instagram-hover {
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
