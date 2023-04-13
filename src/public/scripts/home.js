@@ -5,7 +5,7 @@ const imgPrevBtn = document.querySelector('#imgPrevBtn')
 
 const imgNum = document.querySelector('#imgNum')
 
-const imgList = ['/asests/main_1.jpg', '/asests/btn-order.png']
+const featuredItemsDiv = document.querySelector('#featuredItems')
 
 let currentTimer = 0
 class Timer {
@@ -114,8 +114,58 @@ class imgSlider {
   }
 }
 
+const makeFeaturedItem = (item) => {
+  const div = document.createElement('div')
+  div.classList.add('h-min', 'overflow-hidden', 'rounded-xl', 'bg-zinc-500')
+
+  const img = document.createElement('img')
+  img.src = `/asests/food/${item.image}`
+  img.classList.add('m-auto', 'object-contain', 'p-4', 'h-48')
+
+  const div2 = document.createElement('div')
+  div2.classList.add('bg-zinc-800', 'p-4', 'text-white')
+
+  const h2 = document.createElement('h2')
+  h2.classList.add('mb-2', 'text-center', 'text-2xl', 'font-semibold')
+  h2.innerText = item.name
+
+  const p = document.createElement('p')
+  p.classList.add('pb-2')
+  p.innerText = item.description
+
+  const btn = document.createElement('button')
+  btn.classList.add('btn-blue', 'mx-auto')
+  btn.innerText = 'More Info'
+
+  btn.addEventListener('click', () => {
+    window.location.href = '/product/' + item.id
+  })
+
+  div2.appendChild(h2)
+  div2.appendChild(p)
+  div2.appendChild(btn)
+
+  div.appendChild(img)
+  div.appendChild(div2)
+
+  return div
+}
+
+const getFeaturedItems = async () => {
+  const response = await fetch(`/api/food-items`)
+  const data = await response.json()
+
+  data.forEach((item) => {
+    if (item.category.includes('featured')) {
+      featuredItemsDiv.appendChild(makeFeaturedItem(item))
+    }
+  })
+}
+
 const slider = new imgSlider(imgs)
 slider.updateImgs()
+
+getFeaturedItems()
 
 imgNextBtn.addEventListener('click', () => {
   slider.next()

@@ -31,7 +31,7 @@ model Session {
 model Food {
   id        String   @id @unique @default(uuid())
   name      String
-  description String
+  description String @db.Text
   price     Float
   image     String?
   category  Json 

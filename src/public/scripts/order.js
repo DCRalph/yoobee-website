@@ -47,7 +47,7 @@ const addToCart = async (id, quantity, btn) => {
   const cartData = await cart.json()
   console.log(cartData)
 
-  updateCart(cartData, foodItemsList)
+  updateCart(cartData, foodItems)
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
   btn.innerHTML = 'Add to cart'
@@ -82,13 +82,12 @@ const renderFoodItems2 = (items, filter) => {
 
     const foodImage = document.createElement('div')
     foodImage.setAttribute('x-type', 'foodImage')
-    foodImage.classList.add(
-      'w-full',
-      'overflow-hidden',
-      'bg-zinc-400',
-      'p-2',
-      'h-48'
-    )
+    foodImage.classList.add('w-full', 'overflow-hidden', 'bg-zinc-400', 'h-48')
+
+    const foodImageLink = document.createElement('a')
+    foodImageLink.setAttribute('x-type', 'foodImageLink')
+    foodImageLink.setAttribute('href', `/product/${item.id}`)
+    foodImageLink.classList.add('w-full', 'h-full')
 
     const foodImageImg = document.createElement('img')
     foodImageImg.setAttribute('x-type', 'foodImageImg')
@@ -97,12 +96,15 @@ const renderFoodItems2 = (items, filter) => {
     foodImageImg.classList.add(
       'h-full',
       'w-full',
+      'p-2',
+
       'object-contain',
       'object-center',
       'group-hover:opacity-75'
     )
 
-    foodImage.appendChild(foodImageImg)
+    foodImageLink.appendChild(foodImageImg)
+    foodImage.appendChild(foodImageLink)
 
     const foodInfo = document.createElement('div')
     foodInfo.setAttribute('x-type', 'foodInfo')
@@ -188,7 +190,7 @@ const getFoodItems = async () => {
   const filter = getFilter()
   const response = await fetch(`/api/food-items`)
   const data = await response.json()
-  foodItemsList = data
+  foodItems = data
 
   renderFoodItems2(data, filter)
 }
@@ -197,7 +199,7 @@ filterBtns[0].checked = true
 filterBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     const filter = getFilter()
-    renderFoodItems2(foodItemsList, filter)
+    renderFoodItems2(foodItems, filter)
   })
 })
 
