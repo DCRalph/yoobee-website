@@ -1099,6 +1099,10 @@ video {
   margin: auto;
 }
 
+.m-16 {
+  margin: 4rem;
+}
+
 .mx-6 {
   margin-left: 1.5rem;
   margin-right: 1.5rem;
@@ -1117,6 +1121,11 @@ video {
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+
+.mx-16 {
+  margin-left: 4rem;
+  margin-right: 4rem;
 }
 
 .mb-2 {
@@ -1222,6 +1231,10 @@ video {
 .h-min {
   height: -moz-min-content;
   height: min-content;
+}
+
+.h-\[32rem\] {
+  height: 32rem;
 }
 
 .max-h-72 {
