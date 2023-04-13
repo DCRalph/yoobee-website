@@ -8,6 +8,7 @@
     {{seo}}
 
     <link rel="stylesheet" href="/tailwind.css" />
+    <script src="/scripts/home.js" defer></script>
 
     <script src="/scripts/modules/alert.js" defer></script>
     <script src="/scripts/nav.js" defer></script>
@@ -31,10 +32,79 @@
           <a href="/order" class="btn-blue">Order Now</a>
         </div>
       </section>
-      <section class="col-span-full h-[32rem] md:col-span-6">
-        <img
-          src="asests/main_1.jpg"
-          class="h-full w-full bg-center object-cover" />
+      <section class="col-span-full min-h-[32rem] md:col-span-6">
+        <div
+          class="relative flex h-full w-full select-none justify-center overflow-hidden"
+          id="imgs">
+          <div id="img" class="imgSliderImg">
+            <img
+              src="/asests/main_1.jpg"
+              class="h-full w-full bg-center object-cover"
+              alt="" />
+          </div>
+
+          <div id="img" class="imgSliderImg">
+            <img
+              src="/asests/order-bg.jpg"
+              class="h-full w-full bg-center object-cover"
+              alt="" />
+          </div>
+
+          <div id="img" class="imgSliderImg">
+            <img
+              src="/asests/story0.jpg"
+              class="h-full w-full bg-center object-cover"
+              alt="" />
+          </div>
+
+          <div id="img" class="imgSliderImg">
+            <img
+              src="/asests/story1.jpg"
+              class="h-full w-full bg-center object-cover"
+              alt="" />
+          </div>
+
+          <div class="absolute bottom-0 z-30 flex w-full justify-between p-4">
+            <button
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-white opacity-50 transition hover:opacity-75"
+              id="imgPrevBtn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </button>
+
+            <div
+              class="flex h-12 items-center justify-center rounded-lg bg-white p-4 text-3xl opacity-50">
+              <span id="imgNum">0 / 0</span>
+            </div>
+
+            <button
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-white opacity-50 transition hover:opacity-75"
+              id="imgNextBtn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </section>
 
       <section class="col-span-full h-2 bg-primary"></section>
