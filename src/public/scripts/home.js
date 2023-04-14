@@ -50,6 +50,8 @@ class imgSlider {
     this.timer = new Timer(() => {
       this.next()
     }, 5000)
+
+    this.coolDown = 0
   }
 
   getNextIndex() {
@@ -67,11 +69,17 @@ class imgSlider {
   }
 
   next() {
+    if (Date.now() - this.coolDown < 500) return
+    this.coolDown = Date.now()
+
     this.currIndex = this.getNextIndex()
     this.updateImgs()
   }
 
   prev() {
+    if (Date.now() - this.coolDown < 500) return
+    this.coolDown = Date.now()
+
     this.currIndex = this.getPrevIndex()
     this.updateImgs()
   }
