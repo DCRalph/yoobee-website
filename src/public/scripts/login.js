@@ -25,7 +25,7 @@ form.addEventListener('submit', (e) => {
 
   fetch(url, fetchOptions).then(async (response) => {
     if (response.status == 200) {
-      Alert.success('Logged in successfully', -1)
+      Alert.success('Logged in successfully', 1000)
       await new Promise((res) => setTimeout(res, 500))
       window.location.href = '/'
     } else {
