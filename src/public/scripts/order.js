@@ -97,10 +97,10 @@ const renderFoodItems2 = (items, filter) => {
       'h-full',
       'w-full',
       'p-2',
-
       'object-contain',
       'object-center',
-      'group-hover:opacity-75'
+      'group-hover:opacity-75',
+      'transition-opacity'
     )
 
     foodImageLink.appendChild(foodImageImg)

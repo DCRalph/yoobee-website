@@ -116,11 +116,27 @@ class imgSlider {
 
 const makeFeaturedItem = (item) => {
   const div = document.createElement('div')
-  div.classList.add('h-min', 'overflow-hidden', 'rounded-xl', 'bg-zinc-500')
+  div.classList.add(
+    'h-min',
+    'overflow-hidden',
+    'rounded-xl',
+    'bg-zinc-500',
+    'group'
+  )
+
+  const imgLink = document.createElement('a')
+  imgLink.href = '/product/' + item.id
 
   const img = document.createElement('img')
   img.src = `/asests/food/${item.image}`
-  img.classList.add('m-auto', 'object-contain', 'p-4', 'h-48')
+  img.classList.add(
+    'm-auto',
+    'object-contain',
+    'p-4',
+    'h-48',
+    'group-hover:opacity-75',
+    'transition-opacity'
+  )
 
   const div2 = document.createElement('div')
   div2.classList.add('bg-zinc-800', 'p-4', 'text-white')
@@ -145,7 +161,9 @@ const makeFeaturedItem = (item) => {
   div2.appendChild(p)
   div2.appendChild(btn)
 
-  div.appendChild(img)
+  imgLink.appendChild(img)
+
+  div.appendChild(imgLink)
   div.appendChild(div2)
 
   return div
