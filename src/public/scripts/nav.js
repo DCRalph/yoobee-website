@@ -142,6 +142,7 @@ const makeCartItem = (item, quantity) => {
   )
 
   button.addEventListener('click', () => {
+    button.classList.add('animate-spin')
     delCart(item.id)
   })
 
