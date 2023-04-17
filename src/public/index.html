@@ -17,7 +17,7 @@
     {{nav}}
 
     <main class="grid grid-cols-12">
-      <section
+      <div
         class="prose col-span-full m-auto flex flex-col items-center px-16 py-8 md:col-span-6">
         <h1 class="text-center">World of BurgerFuel</h1>
         <p>
@@ -31,37 +31,37 @@
           <a href="/our-story" class="btn-primary">Learn More</a>
           <a href="/order" class="btn-blue">Order Now</a>
         </div>
-      </section>
-      <section class="col-span-full min-h-[32rem] md:col-span-6">
+      </div>
+      <div class="col-span-full min-h-[32rem] md:col-span-6">
         <div
           class="relative flex h-full w-full select-none justify-center overflow-hidden"
           id="imgs">
-          <div id="img" class="imgSliderImg">
+          <div class="imgSliderImg">
             <img
               src="/asests/main_1.jpg"
               class="h-full w-full bg-center object-cover"
-              alt="" />
+              alt="slider 1 img" />
           </div>
 
-          <div id="img" class="imgSliderImg">
+          <div class="imgSliderImg">
             <img
               src="/asests/order-bg.jpg"
               class="h-full w-full bg-center object-cover"
-              alt="" />
+              alt="slider 2 img" />
           </div>
 
-          <div id="img" class="imgSliderImg">
+          <div class="imgSliderImg">
             <img
               src="/asests/story0.jpg"
               class="h-full w-full bg-center object-cover"
-              alt="" />
+              alt="slider 3 img" />
           </div>
 
-          <div id="img" class="imgSliderImg">
+          <div class="imgSliderImg">
             <img
               src="/asests/story1.jpg"
               class="h-full w-full bg-center object-cover"
-              alt="" />
+              alt="slider 4img" />
           </div>
 
           <div class="absolute bottom-0 z-30 flex w-full justify-between p-4">
@@ -105,11 +105,11 @@
             </button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="col-span-full h-2 bg-primary"></section>
+      <div class="col-span-full h-2 bg-primary"></div>
 
-      <section
+      <div
         class="col-span-full grid gap-4 px-16 py-8 sm:grid-cols-2 lg:grid-cols-3"
         id="featuredItems">
         <div class="col-span-full">
@@ -119,7 +119,7 @@
           <img
             src="asests/bastard.png"
             class="m-auto object-contain p-4"
-            alt="" />
+            alt="burger img" />
           <div class="bg-zinc-800 p-4 text-white">
             <h2 class="mb-2 text-center text-2xl font-semibold">Bastard</h2>
             <p class="pb-2">
@@ -163,7 +163,7 @@
             <button class="btn-primary mx-auto">Add to Cart</button>
           </div>
         </div>
-      </section>
+      </div>
     </main>
 
     {{footer}}

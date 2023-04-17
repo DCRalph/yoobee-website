@@ -1,4 +1,4 @@
-const imgs = document.querySelectorAll('#imgs #img')
+const imgs = document.querySelectorAll('#imgs .imgSliderImg')
 
 const imgNextBtn = document.querySelector('#imgNextBtn')
 const imgPrevBtn = document.querySelector('#imgPrevBtn')
