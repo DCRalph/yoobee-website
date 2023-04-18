@@ -25,14 +25,10 @@ router.get('/robots.txt', (req, res) => {
 })
 
 router.get('/', (req, res) => {
-  // res.sendFile(publicDir('index.html'))
-
   res.send(readFile(publicDir('index.html')))
 })
 
 router.get('/our-story', (req, res) => {
-  // res.sendFile(publicDir('our-story.html'))
-
   res.send(readFile(publicDir('our-story.html')))
 })
 
@@ -55,8 +51,6 @@ router.get('/register', valaidateSession, (req, res) => {
 
 router.get('/account', valaidateSession, (req, res) => {
   if (req.session.account) {
-    // return res.sendFile(publicDir('account.html'))
-
     res.send(readFile(publicDir('account.html')))
   } else {
     return res.redirect('/login')
@@ -64,20 +58,10 @@ router.get('/account', valaidateSession, (req, res) => {
 })
 
 router.get('/order', (req, res) => {
-  // return res.sendFile(publicDir('order.html'))
-
   res.send(readFile(publicDir('order.html')))
 })
 
-router.get('/checkout', (req, res) => {
-  res.send(readFile(publicDir('checkout.html')))
-
-  // return res.sendFile(publicDir('checkout.html'))
-})
-
 router.get('/product/:id(*)', (req, res) => {
-  // return res.sendFile(publicDir('productInfo.html'))
-
   res.send(readFile(publicDir('productInfo.html')))
 })
 
