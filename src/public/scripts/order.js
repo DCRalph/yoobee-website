@@ -15,9 +15,9 @@ let error = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24
 </svg>`
 
 const getFilter = () => {
-  const filter = [...document.querySelectorAll('input[name="category"]')]
+  const filter = [...filterBtns]
   const btn = filter.find((input) => input.checked)
-  const category = btn.getAttribute('category')
+  const category = btn.dataset.category
   console.log(category)
   return category
 }
